@@ -28,9 +28,6 @@ def fetch_screen_size() :
     root.destroy();
 
 def putLabel(text,   x, y, window=None, canvas=None) :
-
-    # label = tk.Label(window, text=text, bg="#f3e48c", fg="black", bd=0)
-    # label.place(x=x, y=y)
     
     text_item = canvas.create_text(x, y , text=text, fill='#000000', font=('"" 10 bold'))
     bbox = canvas.bbox(text_item)
@@ -49,29 +46,26 @@ def destroyWindow () :
         wd.destroy()
         wd=None
     except:
-        print("ERROR destroying window")
+        # print("ERROR destroying window")
+        pass
     
 def createWindow(w, h) :
 
     root = tk.Tk()
-    # tlv = tk.Toplevel(root)
 
     root.overrideredirect(True) # no border
     root.geometry("%dx%d" % (w,h ) )
 
-
-
-    # closeBtn = tk.Button(root, text = "Close", command = lambda: root.destroy())
-    # closeBtn.place(x=40, y=20)
 
     root.attributes('-topmost', 1)
     root.attributes('-alpha', 0.7)
     root.wait_visibility(root)
     root.wm_attributes('-alpha',0.7)
     
-    # root.bind("<Button-3>", destroyWindow)
         
     return root
+
+
 def invImg(img) :
     return cv2.bitwise_not(img)
 
@@ -152,13 +146,16 @@ def do_click() :
     print("do_click()")
 
 def main():
+    
     # fetch_screen_size()
+    
     keyListener = keyboard.Listener( on_press=on_press, on_release=on_release)
     keyListener.start()
     
     global wd
     while True :
-        time.sleep(1)
+        time.sleep(9)
+
 
 
 def screen_do() :
@@ -177,18 +174,25 @@ def screen_do() :
 
     imgOrig = np.asarray(ss_img)
     imgGray = cv2.cvtColor(imgOrig, cv2.COLOR_BGR2GRAY)
+    
+    #  C>0 以 白底黑字 方式做二值 输出是 白底黑字+反色的被描边
     imgThrW = cv2.adaptiveThreshold(imgGray, 255, cv.ADAPTIVE_THRESH_GAUSSIAN_C, cv.THRESH_BINARY , 3 ,  3)
     cv2.imwrite('/tmp/2thrw.png' , imgThrW)
     
+    # 输入 是 白底黑字(w) or 黑底白字(b)
     worb_input = 'w'  # w or b
     
     if worb_input == 'w':
         imgUsedForDlting = invImg ( imgThrW )
+    else :
+        imgUsedForDlting = imgThrB
     
+    # cv.dilate 默认情况下应 输入 黑底白字 的图 输出也是 黑底白字
     imgDlt = cv.dilate( imgUsedForDlting, cv2.getStructuringElement(cv2.MORPH_RECT, ksize=(3,1)) )
     cv2.imwrite('/tmp/3dlt.png' , imgDlt)
     
         
+    # 默认情况closing操作应输入 黑底白字 的图 输出也是 黑底白字
     imgCls = cv2.morphologyEx(imgDlt, cv2.MORPH_CLOSE, cv2.getStructuringElement(cv2.MORPH_RECT, ksize=(3,1)) )
     cv2.imwrite('/tmp/4cls.png' , imgCls)
     
@@ -238,10 +242,9 @@ def screen_do() :
             "keyp": keyp, 
             "cord": [pointX, pointY]
             } )
-        # putLabel(''.join(keyp) ,  (xmax+xmin)/2, (ymax+ymin)/2 , window=wd)
         putLabel(''.join(keyp) ,  pointX , pointY , canvas = canvas)
-        # print("i=%d, keyp=%s" % (i, ''.join(keyp) ) )
         # putLabel(str(i) , wd, (xmax+xmin)/2, (ymax+ymin)/2 )
+        # print("i=%d, keyp=%s" % (i, ''.join(keyp) ) )
     
     wd.update()
     print(keypList)
