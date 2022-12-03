@@ -10,6 +10,11 @@ cv2 = cv
 
 from PIL import ImageGrab, ImageTk
 import tkinter as tk
+
+from pynput.mouse import Button, Controller
+
+mouse = Controller()
+
 screenW = 1300
 screenH = 600
 wd = None
@@ -144,6 +149,7 @@ def on_release(key):
 
 def do_click() :
     print("do_click()")
+    mouse.click(Button.left, 1)
 
 def main():
     
