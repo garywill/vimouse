@@ -19,7 +19,7 @@ screenW = 1300
 screenH = 600
 wd = None
 
-letterList = list('ABCDEFGHJKLMNPQRSTUVWXYZ23456789')
+letterList = list('ABCDEFGHJKLMNOPQRSTUVWXYZ234789[;/')
 
 keypList = []
 LC = 0
