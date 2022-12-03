@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import time
+from pynput import keyboard
 
 import numpy as np
 import cv2 as cv
@@ -32,7 +33,9 @@ def putLabel(text,   x, y, window=None, canvas=None) :
 
 def destroyWindow () :
     print("destroyWindow()")
+    global showingKeyps, keypList
     global wd
+    showingKeyps = False
     keypList = []
     try:
         wd.destroy()
@@ -85,10 +88,79 @@ def mserImg(img, bgImg) :
     
 
 
+startKeysStatus = 0
+showingKeyps = False
+
+clickKeysStatus = 0
+
+def on_press(key):
+    global startKeysStatus, clickKeysStatus, showingKeyps
+    global wd
+    global keypList
+    
+    if key == keyboard.Key.ctrl and startKeysStatus == 0 :
+        startKeysStatus = 1
+    elif startKeysStatus == 1 and key == keyboard.Key.cmd  :
+        screen_do()
+        showingKeyps = True
+        startKeysStatus = 0
+        return
+        
+    if key == keyboard.Key.cmd and clickKeysStatus == 0 and not showingKeyps :
+        clickKeysStatus = 1
+    elif clickKeysStatus == 1 and key == keyboard.Key.ctrl  and not showingKeyps:
+        clickKeysStatus = 2
+        return
+        
+        
+    if key == keyboard.Key.esc and wd != None :
+        wd.update()
+        destroyWindow()
+        return
+    
+    char = 0
+    try:
+        char = key.char
+        
+    except:
+        pass
+    
+    
+
+def on_release(key):
+    global startKeysStatus, clickKeysStatus, showingKeyps
+    
+    if clickKeysStatus == 2 and key == keyboard.Key.ctrl and not showingKeyps :
+        do_click()
+        clickKeysStatus = 0
+        
+    startKeysStatus = 0
+    
+    if key != keyboard.Key.cmd :
+        clickKeysStatus = 0
+
+
+def do_click() :
+    print("do_click()")
 
 def main():
+    keyListener = keyboard.Listener( on_press=on_press, on_release=on_release)
+    keyListener.start()
     
     global wd
+    while True :
+        time.sleep(1)
+
+
+def screen_do() :
+    global keypList
+    global wd
+    
+    try:
+        destroyWindow()
+    except:
+        pass
+    
     
     
     ss_img = ImageGrab.grab((0, 0, screenW, screenH))
