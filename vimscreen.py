@@ -18,6 +18,14 @@ letterList = list('ABCDEFGHJKLMNPQRSTUVWXYZ23456789')
 
 keypList = []
 
+def fetch_screen_size() :
+    global screenW, screenH
+    root = tk.Tk()
+    w = root.winfo_screenwidth()
+    h = root.winfo_screenheight()
+    screenW = w
+    screenH = h
+    root.destroy();
 
 def putLabel(text,   x, y, window=None, canvas=None) :
 
@@ -144,6 +152,7 @@ def do_click() :
     print("do_click()")
 
 def main():
+    # fetch_screen_size()
     keyListener = keyboard.Listener( on_press=on_press, on_release=on_release)
     keyListener.start()
     
