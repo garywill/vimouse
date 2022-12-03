@@ -27,6 +27,17 @@ LC = 0
 prsdKeys = []
 keypListFiltered = []
 
+def main():
+    
+    # fetch_screen_size()
+    
+    keyListener = keyboard.Listener( on_press=on_press, on_release=on_release)
+    keyListener.start()
+    
+    global wd
+    while True :
+        time.sleep(9)
+
 def resetKeyPrsd() :
     print("resetKeyPrsd()")
     global  prsdKeys, keypListFiltered
@@ -203,16 +214,6 @@ def do_click() :
     print("do_click()")
     mouse.click(Button.left, 1)
 
-def main():
-    
-    # fetch_screen_size()
-    
-    keyListener = keyboard.Listener( on_press=on_press, on_release=on_release)
-    keyListener.start()
-    
-    global wd
-    while True :
-        time.sleep(9)
 
 
 
