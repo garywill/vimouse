@@ -3,10 +3,37 @@
 import time
 
 from PIL import ImageGrab
+import numpy as np
+import cv2 as cv
 
+cv2 = cv
 
 screenW = 1300
 screenH = 600
+
+def invImg(img) :
+    return cv2.bitwise_not(img)
+
+
+def mserImg(img, bgImg) :
+    
+    
+    imgInput = img 
+    mser = cv2.MSER_create(
+        edge_blur_size = 1
+        )
+    regions, _ = mser.detectRegions(imgInput)
+    
+    imgOutput = bgImg
+    
+    for p in regions:
+        xmax, ymax = np.amax(p, axis=0)
+        xmin, ymin = np.amin(p, axis=0)
+        cv2.rectangle(imgOutput, (xmin,ymax), (xmax,ymin), (0, 0, 180), 1)
+    
+    return imgOutput, regions
+    
+
 
 
 def main():
@@ -33,6 +60,13 @@ def main():
     cv2.imwrite('/tmp/4cls.png' , imgCls)
     
  
+
+
+
+    imgMser, regions = mserImg(invImg(imgCls) , imgOrig)
+    
+    print( len (regions) )
+    
     
 if __name__ == '__main__':
     main()
