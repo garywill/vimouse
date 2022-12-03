@@ -13,10 +13,27 @@ screenW = 1300
 screenH = 600
 wd = None
 
+letterList = list('ABCDEFGHJKLMNPQRSTUVWXYZ23456789')
+
+keypList = []
+
+
+def putLabel(text,   x, y, window=None, canvas=None) :
+
+    # label = tk.Label(window, text=text, bg="#f3e48c", fg="black", bd=0)
+    # label.place(x=x, y=y)
+    
+    text_item = canvas.create_text(x, y , text=text, fill='#000000', font=('"" 10 bold'))
+    bbox = canvas.bbox(text_item)
+    rect_item = canvas.create_rectangle(bbox, fill="#f3e48c", outline="#0000ff")
+    canvas.tag_raise(text_item,rect_item)
+    # return label
+
 
 def destroyWindow () :
     print("destroyWindow()")
     global wd
+    keypList = []
     try:
         wd.destroy()
         wd=None
@@ -102,6 +119,15 @@ def main():
     
     print( len (regions) )
     
+    LC = 0
+    for LC in range(1, 10) :
+        if pow( len(letterList) , LC) >= len(regions) :
+            break
+        
+    print(LC)
+    
+    keypList = []
+    
     
     wd = createWindow(screenW, screenH)
     
@@ -111,7 +137,33 @@ def main():
     canvas.place(x=0, y=0)
     canvas.create_image(0, 0, image=wdBgImg, anchor=tk.NW)
     
+    for i in range(0, len(regions) ) :
+        p = regions [i]
+        
+        xmax, ymax = np.amax(p, axis=0)
+        xmin, ymin = np.amin(p, axis=0)
+        
+        pointX = (xmax+xmin)/2
+        pointY = (ymax+ymin)/2
+    
+        keyp = []
+        for j in range(0, LC) :
+            l = str ( letterList[ int( i / pow( len(letterList), j) ) % pow( len(letterList), j+1) ] ) 
+                
+            keyp.insert (0, l)
+            
+        
+        keypList.append( {
+            "keyp": keyp, 
+            "cord": [pointX, pointY]
+            } )
+        # putLabel(''.join(keyp) ,  (xmax+xmin)/2, (ymax+ymin)/2 , window=wd)
+        putLabel(''.join(keyp) ,  pointX , pointY , canvas = canvas)
+        # print("i=%d, keyp=%s" % (i, ''.join(keyp) ) )
+        # putLabel(str(i) , wd, (xmax+xmin)/2, (ymax+ymin)/2 )
+    
     wd.update()
+    print(keypList)
     # wd.mainloop()
     
 if __name__ == '__main__':
