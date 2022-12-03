@@ -20,6 +20,13 @@ def main():
     imgThrW = cv2.adaptiveThreshold(imgGray, 255, cv.ADAPTIVE_THRESH_GAUSSIAN_C, cv.THRESH_BINARY , 3 ,  3)
     cv2.imwrite('/tmp/2thrw.png' , imgThrW)
     
+    worb_input = 'w'  # w or b
+    
+    if worb_input == 'w':
+        imgUsedForDlting = invImg ( imgThrW )
+    
+    imgDlt = cv.dilate( imgUsedForDlting, cv2.getStructuringElement(cv2.MORPH_RECT, ksize=(3,1)) )
+    cv2.imwrite('/tmp/3dlt.png' , imgDlt)
  
     
 if __name__ == '__main__':
