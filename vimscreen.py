@@ -22,6 +22,55 @@ wd = None
 letterList = list('ABCDEFGHJKLMNPQRSTUVWXYZ23456789')
 
 keypList = []
+LC = 0
+
+prsdKeys = []
+keypListFiltered = []
+
+def resetKeyPrsd() :
+    print("resetKeyPrsd()")
+    global  prsdKeys, keypListFiltered
+    prsdKeys = []
+    keypListFiltered = keypList
+    
+def processKeyChar(char) :
+    print(char)
+    global  prsdKeys, keypListFiltered
+    char = char.upper()
+    
+    prsdKeys.append(char)
+    print(prsdKeys)
+    
+    hasMatch = False
+    matchKeyp = None
+    
+    N = len(prsdKeys)-1
+    
+    keypListFiltered = [x for x in keypListFiltered if x['keyp'][N] == char]
+    # print("\n keypListFiltered:")
+    # print(keypListFiltered)
+    print( len(keypListFiltered) )
+    
+    if not len(keypListFiltered) > 0 :
+        resetKeyPrsd()
+    
+    if len(keypListFiltered) == 1  :
+        hasMatch = True
+        matchKeyp = keypListFiltered[0]
+    
+        print("hasMatch")
+        print(matchKeyp)
+        
+        destroyWindow()
+        
+        resetKeyPrsd()
+        
+        x = matchKeyp['cord'][0]
+        y = matchKeyp['cord'][1]
+        mouse.position = (x, y)
+        
+
+
 
 def fetch_screen_size() :
     global screenW, screenH
@@ -125,13 +174,16 @@ def on_press(key):
         destroyWindow()
         return
     
-    char = 0
-    try:
-        char = key.char
-        
-    except:
-        pass
+    if showingKeyps :
+        char = 0
+        try:
+            char = key.char
+        except:
+            # print("key no char")
+            pass
     
+        if char :
+            processKeyChar(char)
     
 
 def on_release(key):
@@ -165,7 +217,7 @@ def main():
 
 
 def screen_do() :
-    global keypList
+    global keypList, keypListFiltered , LC
     global wd
     
     try:
@@ -252,8 +304,9 @@ def screen_do() :
         # putLabel(str(i) , wd, (xmax+xmin)/2, (ymax+ymin)/2 )
         # print("i=%d, keyp=%s" % (i, ''.join(keyp) ) )
     
+    keypListFiltered = keypList
     wd.update()
-    print(keypList)
+    # print(keypList)
     # wd.mainloop()
     
 if __name__ == '__main__':
