@@ -27,6 +27,11 @@ def main():
     
     imgDlt = cv.dilate( imgUsedForDlting, cv2.getStructuringElement(cv2.MORPH_RECT, ksize=(3,1)) )
     cv2.imwrite('/tmp/3dlt.png' , imgDlt)
+    
+        
+    imgCls = cv2.morphologyEx(imgDlt, cv2.MORPH_CLOSE, cv2.getStructuringElement(cv2.MORPH_RECT, ksize=(3,1)) )
+    cv2.imwrite('/tmp/4cls.png' , imgCls)
+    
  
     
 if __name__ == '__main__':
