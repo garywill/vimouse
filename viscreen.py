@@ -4,6 +4,24 @@
 # Copyright Garywill (github.com/garywill)   
 #   copyright 2022 - 
 
+
+
+# --------------------------
+
+ 
+
+# for debug not cover whole screen
+screenW = 1300
+screenH = 500
+# enable 'fetch_screen_size' in main() if you want it to cover whole screen
+
+
+fontsize = 10
+
+
+# --------------------------
+
+
 import time
 from pynput import keyboard
 from pynput.mouse import Button, Controller
@@ -19,8 +37,6 @@ import tkinter as tk
 
 
 
-screenW = 1300
-screenH = 500
 
 keyListener = None
 
@@ -59,7 +75,7 @@ def main():
     global wd, wdShow
     
     # uncomment this to do for whole screen
-    fetch_screen_size()
+    # fetch_screen_size()
     
     createWindow(screenW, screenH)
     hideWindow()
@@ -188,7 +204,7 @@ def on_release(key):
 
 
 def putLabel(text,   x, y,  canvas=None) :
-    text_item = canvas.create_text(x, y , text=text, fill='#000000', font=('"" 10 bold'))
+    text_item = canvas.create_text(x, y , text=text, fill='#000000', font=('"" %d bold' % fontsize))
     bbox = canvas.bbox(text_item)
     rect_item = canvas.create_rectangle(bbox, fill="#f3e48c", outline="#0000ff")
     canvas.tag_raise(text_item,rect_item)
