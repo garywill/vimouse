@@ -21,7 +21,7 @@ fontsize = 10
 # whether to do a click after moving the mouse cursor to a position
 autoClick = False
 # the window need some time to disappear
-autoClickDelay = 0.4 # unit: second
+autoClickDelay = 0.3 # unit: second
 
 
 # --------------------------
@@ -85,19 +85,24 @@ def main():
     print("creating window..")
     createWindow(screenW, screenH)
     print("hiding window..")
-    hideWindow()
+    _hideWindow()
     
     print("starting key listener..")
     keyListenerStart(False)
     
     print("listening")
+    
+    lastWdShow = wdShow
     while True :
-        time.sleep(0.2)
-        if wd :
+        time.sleep(0.05)
+        if lastWdShow != wdShow and wd :
             if wdShow :
                 _showWindow()
             else:
                 _hideWindow()
+                
+        lastWdShow = wdShow
+        
 
 def keyListenerStart(suppress=False) :
     global keyListener
@@ -355,7 +360,7 @@ def screen_do() :
     imgThrW = cv2.adaptiveThreshold(imgGray, 255, cv.ADAPTIVE_THRESH_GAUSSIAN_C, cv.THRESH_BINARY , 3 ,  3)
     
     # C<=0 以 黑底白字 方式做二值 输出是 黑底白字+反色的被描边
-    imgThrB = cv2.adaptiveThreshold(imgGray, 255, cv.ADAPTIVE_THRESH_GAUSSIAN_C, cv.THRESH_BINARY , 3 ,  -3)
+    # imgThrB = cv2.adaptiveThreshold(imgGray, 255, cv.ADAPTIVE_THRESH_GAUSSIAN_C, cv.THRESH_BINARY , 3 ,  -3)
     
     # 输入 是 白底黑字(w) or 黑底白字(b)
     worb_input = 'w'  # w or b
