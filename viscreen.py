@@ -172,7 +172,7 @@ def processKeyChar(char) :
 def on_press(key):
     global startKeysStatus, clickKeysStatus, showingScreen
     
-    if not showingScreen and key == keyboard.Key.ctrl and startKeysStatus == 0 :
+    if not showingScreen and ( key == keyboard.Key.ctrl or key == keyboard.Key.ctrl_l ) and startKeysStatus == 0 :
         startKeysStatus = 1
     elif not showingScreen and startKeysStatus == 1 and key == keyboard.Key.cmd  :
         keyListenerStop()
@@ -183,7 +183,7 @@ def on_press(key):
         
     if key == keyboard.Key.cmd and clickKeysStatus == 0 and not showingScreen :
         clickKeysStatus = 1
-    elif clickKeysStatus == 1 and key == keyboard.Key.ctrl  and not showingScreen:
+    elif clickKeysStatus == 1 and ( key == keyboard.Key.ctrl or key == keyboard.Key.ctrl_l )  and not showingScreen:
         clickKeysStatus = 2
         return
         
@@ -209,7 +209,7 @@ def on_press(key):
 def on_release(key):
     global startKeysStatus, clickKeysStatus, showingScreen
     
-    if clickKeysStatus == 2 and key == keyboard.Key.ctrl and not showingScreen :
+    if clickKeysStatus == 2 and ( key == keyboard.Key.ctrl or key == keyboard.Key.ctrl_l ) and not showingScreen :
         do_click()
         clickKeysStatus = 0
         
