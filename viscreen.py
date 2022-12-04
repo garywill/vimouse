@@ -77,11 +77,15 @@ def main():
     # uncomment this to do for whole screen
     # fetch_screen_size()
     
+    print("creating window..")
     createWindow(screenW, screenH)
+    print("hiding window..")
     hideWindow()
     
+    print("starting key listener..")
     keyListenerStart(False)
     
+    print("listening")
     while True :
         time.sleep(0.2)
         if wd :
