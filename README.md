@@ -2,6 +2,14 @@
 
 Use keyboard to click anywhere on screen. OpenCV based. 
 
+- Dependencies:
+  - python3
+  - opencv
+  - tkinter
+  - pillow (with pillow-tk)
+  - numpy
+  - pynput
+
 
 **Usage**:
 
