@@ -19,7 +19,7 @@ screenH = 500
 fontsize = 10
 
 # whether to do a click after moving the mouse cursor to a position
-autoClick = False
+autoClick = True
 # the window need some time to disappear
 autoClickDelay = 0.3 # unit: second
 
