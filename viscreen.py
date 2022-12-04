@@ -1,62 +1,106 @@
 #!/usr/bin/env python3
 
+# Licensed under LGPL 3.0
+# Copyright Garywill (github.com/garywill)   
+#   copyright 2022 - 
+
 import time
 from pynput import keyboard
+from pynput.mouse import Button, Controller
+mouse = Controller()
 
 import numpy as np
 import cv2 as cv
-
 cv2 = cv
+
 
 from PIL import ImageGrab, ImageTk
 import tkinter as tk
 
-from pynput.mouse import Button, Controller
 
-mouse = Controller()
 
 screenW = 1300
-screenH = 600
+screenH = 500
+
+keyListener = None
+
+
+wdShow = False
 wd = None
+imgScrn = None
+imgTk = None
+canvas = None
 
-letterList = list('ABCDEFGHJKLMNOPQRSTUVWXYZ234789[;/')
 
-keypList = []
+startKeysStatus = 0
+clickKeysStatus = 0
+
+
+showingScreen = False
+
+
+
+regions = []
 LC = 0
+keypList = []
+
 
 prsdKeys = []
 keypListFiltered = []
 
+
+
+
+letterList = list('ABCDEFGHJKLMNOPQRSTUVWXYZ234789[;/')
+
+
+
 def main():
+    global wd, wdShow
     
-    # fetch_screen_size()
+    # uncomment this to do for whole screen
+    fetch_screen_size()
     
-    keyListener = keyboard.Listener( on_press=on_press, on_release=on_release)
-    keyListener.start()
+    createWindow(screenW, screenH)
+    hideWindow()
     
-    global wd
+    keyListenerStart(False)
+    
     while True :
-        time.sleep(9)
+        time.sleep(0.2)
+        if wd :
+            if wdShow :
+                _showWindow()
+            else:
+                _hideWindow()
+
+def keyListenerStart(suppress=False) :
+    global keyListener
+    
+    keyListener = keyboard.Listener( on_press=on_press, on_release=on_release, suppress = suppress)
+    keyListener.start()
+
+def keyListenerStop() :
+    global keyListener
+    keyListener.stop()
 
 def resetKeyPrsd() :
-    print("resetKeyPrsd()")
     global  prsdKeys, keypListFiltered
+    print("resetKeyPrsd()")
     prsdKeys = []
     keypListFiltered = keypList
     
 def processKeyChar(char) :
-    print(char)
-    global  prsdKeys, keypListFiltered
+    global LC
+    global prsdKeys, keypListFiltered
+    
+    print("\n\nprocessKeyChar() char=%s" % char)
     char = char.upper()
     
     prsdKeys.append(char)
     print(prsdKeys)
     
-    hasMatch = False
-    matchKeyp = None
-    
     N = len(prsdKeys)-1
-    
     keypListFiltered = [x for x in keypListFiltered if x['keyp'][N] == char]
     # print("\n keypListFiltered:")
     # print(keypListFiltered)
@@ -66,34 +110,84 @@ def processKeyChar(char) :
         resetKeyPrsd()
     
     if len(keypListFiltered) == 1  :
-        hasMatch = True
-        matchKeyp = keypListFiltered[0]
-    
         print("hasMatch")
+        
+        matchKeyp = keypListFiltered[0]
         print(matchKeyp)
         
-        destroyWindow()
+        keyListenerStop()
         
-        resetKeyPrsd()
         
         x = matchKeyp['cord'][0]
         y = matchKeyp['cord'][1]
         mouse.position = (x, y)
         
-
-
-
-def fetch_screen_size() :
-    global screenW, screenH
-    root = tk.Tk()
-    w = root.winfo_screenwidth()
-    h = root.winfo_screenheight()
-    screenW = w
-    screenH = h
-    root.destroy();
-
-def putLabel(text,   x, y, window=None, canvas=None) :
+        screen_away()
+        
+        resetKeyPrsd()
+        
+        keyListenerStart(False)
+        
     
+    if len(prsdKeys) >= LC :
+        print( "presKeys len >= max")
+        resetKeyPrsd()
+        return
+
+
+def on_press(key):
+    global startKeysStatus, clickKeysStatus, showingScreen
+    
+    if not showingScreen and key == keyboard.Key.ctrl and startKeysStatus == 0 :
+        startKeysStatus = 1
+    elif not showingScreen and startKeysStatus == 1 and key == keyboard.Key.cmd  :
+        keyListenerStop()
+        screen_do()
+        startKeysStatus = 0
+        keyListenerStart(True)
+        return
+        
+    if key == keyboard.Key.cmd and clickKeysStatus == 0 and not showingScreen :
+        clickKeysStatus = 1
+    elif clickKeysStatus == 1 and key == keyboard.Key.ctrl  and not showingScreen:
+        clickKeysStatus = 2
+        return
+        
+        
+    if key == keyboard.Key.esc and showingScreen :
+        keyListenerStop()
+        screen_away()
+        keyListenerStart(False)
+        return
+    
+    if showingScreen :
+        char = 0
+        try:
+            char = key.char
+        except:
+            # print("key no char")
+            pass
+    
+        if char :
+            processKeyChar(char)
+    
+
+def on_release(key):
+    global startKeysStatus, clickKeysStatus, showingScreen
+    
+    if clickKeysStatus == 2 and key == keyboard.Key.ctrl and not showingScreen :
+        do_click()
+        clickKeysStatus = 0
+        
+    startKeysStatus = 0
+    
+    if key != keyboard.Key.cmd :
+        clickKeysStatus = 0
+
+
+
+
+def putLabel(text,   x, y,  canvas=None) :
     text_item = canvas.create_text(x, y , text=text, fill='#000000', font=('"" 10 bold'))
     bbox = canvas.bbox(text_item)
     rect_item = canvas.create_rectangle(bbox, fill="#f3e48c", outline="#0000ff")
@@ -103,32 +197,61 @@ def putLabel(text,   x, y, window=None, canvas=None) :
 
 def destroyWindow () :
     print("destroyWindow()")
-    global showingKeyps, keypList
+    global showingScreen, keypList
     global wd
-    showingKeyps = False
+    
+    
+    showingScreen = False
     keypList = []
-    try:
+    
+    if wd :
         wd.destroy()
         wd=None
-    except:
-        # print("ERROR destroying window")
-        pass
+    else :
+        print("no wd")
+    
+def showWindow() :
+    global wdShow
+    wdShow = True
+    
+def hideWindow() :
+    global wdShow
+    wdShow = False
+
+    
+def _hideWindow() :
+    wd.withdraw()
+    canvas.delete('all')
+    
+def _showWindow() :
+    global keypList
+    global imgScrn,  imgTk, canvas
+    
+    imgTk = ImageTk.PhotoImage(imgScrn)
+    canvas.create_image(0, 0, image=imgTk, anchor=tk.NW)
+
+    for kpc in keypList :
+        putLabel(''.join(kpc['keyp']) ,  kpc['cord'][0] ,  kpc['cord'][1] , canvas = canvas)
+
+    wd.update()
+    wd.deiconify()
+    wd.update()
     
 def createWindow(w, h) :
+    global wd, canvas
+    wd = tk.Tk()
 
-    root = tk.Tk()
-
-    root.overrideredirect(True) # no border
-    root.geometry("%dx%d" % (w,h ) )
-
-
-    root.attributes('-topmost', 1)
-    root.attributes('-alpha', 0.7)
-    root.wait_visibility(root)
-    root.wm_attributes('-alpha',0.7)
+    wd.overrideredirect(True) # no border
+    wd.geometry("%dx%d" % (w,h ) )
     
-        
-    return root
+    canvas = tk.Canvas(wd, width= screenW, height= screenH)
+    canvas.place(x=0, y=0)
+
+    wd.attributes('-topmost', 1)
+    wd.attributes('-alpha', 0.7)
+    wd.wait_visibility(wd)
+    wd.wm_attributes('-alpha',0.7)
+    
 
 
 def invImg(img) :
@@ -136,10 +259,26 @@ def invImg(img) :
 
 
 def mserImg(img, bgImg) :
-    
+    # int  	delta = 5,
+    # int  	min_area = 60,
+    # int  	max_area = 14400,
+    # double  	max_variation = 0.25,
+    # double  	min_diversity = .2,
+    # int  	max_evolution = 200,
+    # double  	area_threshold = 1.01,
+    # double  	min_margin = 0.003,
+    # int  	edge_blur_size = 5 
     
     imgInput = img 
     mser = cv2.MSER_create(
+        # delta = 40,
+        # min_area = 4,
+        # max_area = 80000,
+        # # max_variation = max_variation,
+        # # min_diversity = .02,
+        # # max_evolution = 20000,
+        # # # area_threshold = area_threshold,
+        # # min_margin = 0.00003,
         edge_blur_size = 1
         )
     regions, _ = mser.detectRegions(imgInput)
@@ -155,59 +294,7 @@ def mserImg(img, bgImg) :
     
 
 
-startKeysStatus = 0
-showingKeyps = False
 
-clickKeysStatus = 0
-
-def on_press(key):
-    global startKeysStatus, clickKeysStatus, showingKeyps
-    global wd
-    global keypList
-    
-    if key == keyboard.Key.ctrl and startKeysStatus == 0 :
-        startKeysStatus = 1
-    elif startKeysStatus == 1 and key == keyboard.Key.cmd  :
-        screen_do()
-        showingKeyps = True
-        startKeysStatus = 0
-        return
-        
-    if key == keyboard.Key.cmd and clickKeysStatus == 0 and not showingKeyps :
-        clickKeysStatus = 1
-    elif clickKeysStatus == 1 and key == keyboard.Key.ctrl  and not showingKeyps:
-        clickKeysStatus = 2
-        return
-        
-        
-    if key == keyboard.Key.esc and wd != None :
-        wd.update()
-        destroyWindow()
-        return
-    
-    if showingKeyps :
-        char = 0
-        try:
-            char = key.char
-        except:
-            # print("key no char")
-            pass
-    
-        if char :
-            processKeyChar(char)
-    
-
-def on_release(key):
-    global startKeysStatus, clickKeysStatus, showingKeyps
-    
-    if clickKeysStatus == 2 and key == keyboard.Key.ctrl and not showingKeyps :
-        do_click()
-        clickKeysStatus = 0
-        
-    startKeysStatus = 0
-    
-    if key != keyboard.Key.cmd :
-        clickKeysStatus = 0
 
 
 def do_click() :
@@ -215,28 +302,31 @@ def do_click() :
     mouse.click(Button.left, 1)
 
 
-
+def screen_away() :
+    global showingScreen
+    showingScreen = False
+    hideWindow()
+    resetKeyPrsd()
+    resetRegions()
 
 def screen_do() :
-    global keypList, keypListFiltered , LC
-    global wd
+    global showingScreen
+    global imgScrn
     
-    try:
-        destroyWindow()
-    except:
-        pass
-    
-    
-    
-    ss_img = ImageGrab.grab((0, 0, screenW, screenH))
-    ss_img.save("/tmp/s.jpg")
+    showingScreen = True
 
-    imgOrig = np.asarray(ss_img)
+    resetKeyPrsd()
+    
+    imgScrn = ImageGrab.grab((0, 0, screenW, screenH))
+    
+    imgOrig = np.asarray(imgScrn)
     imgGray = cv2.cvtColor(imgOrig, cv2.COLOR_BGR2GRAY)
     
     #  C>0 以 白底黑字 方式做二值 输出是 白底黑字+反色的被描边
     imgThrW = cv2.adaptiveThreshold(imgGray, 255, cv.ADAPTIVE_THRESH_GAUSSIAN_C, cv.THRESH_BINARY , 3 ,  3)
-    cv2.imwrite('/tmp/2thrw.png' , imgThrW)
+    
+    # C<=0 以 黑底白字 方式做二值 输出是 黑底白字+反色的被描边
+    imgThrB = cv2.adaptiveThreshold(imgGray, 255, cv.ADAPTIVE_THRESH_GAUSSIAN_C, cv.THRESH_BINARY , 3 ,  -3)
     
     # 输入 是 白底黑字(w) or 黑底白字(b)
     worb_input = 'w'  # w or b
@@ -248,68 +338,61 @@ def screen_do() :
     
     # cv.dilate 默认情况下应 输入 黑底白字 的图 输出也是 黑底白字
     imgDlt = cv.dilate( imgUsedForDlting, cv2.getStructuringElement(cv2.MORPH_RECT, ksize=(3,1)) )
-    cv2.imwrite('/tmp/3dlt.png' , imgDlt)
-    
         
     # 默认情况closing操作应输入 黑底白字 的图 输出也是 黑底白字
     imgCls = cv2.morphologyEx(imgDlt, cv2.MORPH_CLOSE, cv2.getStructuringElement(cv2.MORPH_RECT, ksize=(3,1)) )
-    cv2.imwrite('/tmp/4cls.png' , imgCls)
-    
- 
-
-
 
     imgMser, regions = mserImg(invImg(imgCls) , imgOrig)
     
-    print( len (regions) )
+    updateRegions(regions)
+    showWindow()
     
+def updateRegions(newRegions) :    
+    global regions, LC, keypList, keypListFiltered
+    regions = newRegions
+    print( len (regions) )
     LC = 0
     for LC in range(1, 10) :
         if pow( len(letterList) , LC) >= len(regions) :
             break
-        
     print(LC)
-    
     keypList = []
-    
-    
-    wd = createWindow(screenW, screenH)
-    
-    wdBgImg = ImageTk.PhotoImage(ss_img)
-    
-    canvas = tk.Canvas(wd, width= screenW, height= screenH)
-    canvas.place(x=0, y=0)
-    canvas.create_image(0, 0, image=wdBgImg, anchor=tk.NW)
-    
     for i in range(0, len(regions) ) :
         p = regions [i]
-        
         xmax, ymax = np.amax(p, axis=0)
         xmin, ymin = np.amin(p, axis=0)
-        
         pointX = (xmax+xmin)/2
         pointY = (ymax+ymin)/2
-    
         keyp = []
         for j in range(0, LC) :
             l = str ( letterList[ int( i / pow( len(letterList), j) ) % pow( len(letterList), j+1) ] ) 
-                
             keyp.insert (0, l)
-            
-        
         keypList.append( {
             "keyp": keyp, 
             "cord": [pointX, pointY]
             } )
-        putLabel(''.join(keyp) ,  pointX , pointY , canvas = canvas)
-        # putLabel(str(i) , wd, (xmax+xmin)/2, (ymax+ymin)/2 )
         # print("i=%d, keyp=%s" % (i, ''.join(keyp) ) )
-    
     keypListFiltered = keypList
-    wd.update()
-    # print(keypList)
-    # wd.mainloop()
     
+    
+def resetRegions() :
+    global LC , regions, keypList, keypListFiltered
+    LC = 0
+    regions = []
+    keypList = []
+    keypListFiltered = keypList
+
+
+def fetch_screen_size() :
+    global screenW, screenH
+    root = tk.Tk()
+    w = root.winfo_screenwidth()
+    h = root.winfo_screenheight()
+    screenW = w
+    screenH = h
+    root.destroy();
+
+
 if __name__ == '__main__':
     main()
     
