@@ -18,6 +18,11 @@ screenH = 500
 
 fontsize = 10
 
+# whether to do a click after moving the mouse cursor to a position
+autoClick = False
+# the window need some time to disappear
+autoClickDelay = 0.4 # unit: second
+
 
 # --------------------------
 
@@ -147,6 +152,10 @@ def processKeyChar(char) :
         resetKeyPrsd()
         
         keyListenerStart(False)
+        
+        time.sleep(autoClickDelay)
+        if autoClick :
+            do_click()
         
     
     if len(prsdKeys) >= LC :
