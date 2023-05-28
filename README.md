@@ -6,6 +6,8 @@ Use keyboard to click anywhere of screen. OpenCV based screenshot visual recogni
 
 > The **vi** in the name here can mean "Vim", "Vision" or whatever
 
+![screenshot](demo.gif)
+
 Dependencies:
 
 - python3 and: opencv , tkinter (tk/tcl) , pillow (with pillow-tk) , numpy , pynput
