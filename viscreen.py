@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
-# Licensed under LGPL 3.0
+# Licensed under GPL 3.0
 # Copyright Garywill (github.com/garywill)   
-#   copyright 2022 - 
+#   copyright 2023 - 
 
 
 

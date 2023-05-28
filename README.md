@@ -35,13 +35,21 @@ There're some known issues. Apparently there're many we can do to improve it (op
 Keyboard clicking:
 
 - [hunt-and-peck](https://github.com/zsims/hunt-and-peck) Simple vimium/vimperator style navigation for Windows applications based on the UI Automation framework.
+
 - [vimac](https://github.com/dexterleng/vimac) keyboard-driven navigation and control of the macOS Graphical User Interface (GUI)
+
 - [vimium-everywhere](https://github.com/phil294/vimium-everywhere) OS-wide Keyboard navigation for Linux and Windows
 
+- [keynav](https://github.com/jordansissel/keynav) Control the mouse with the keyboard. only works on X11
+
 - [Vimperator](https://github.com/vimperator/vimperator-labs) (discontinued) Make Firefox/Thunderbird look and behave like Vim
+
 - [vimkey](https://github.com/Haojen/vimkey) Browser extension. Use the keyboard trigger click button or open a link
+
 - [Vimium](https://github.com/philc/vimium) browser extension that provides keyboard-based navigation and control of the web in the spirit of the Vim editor.
+
 - [Vimium C](https://github.com/gdh1995/vimium-c) A Customized Vimium having contextual mapping, global shortcuts, command sequences
+
 - [Big Search](https://github.com/garywill/BigSearch) A multiple-search-engine browser extension that has keyboard clicking feature on its UI
 
 Edit text using vi-like keybinding on non-vi app:
