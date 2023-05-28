@@ -4,7 +4,7 @@ Let's do some tries to dump traditional mouse
 
 Use keyboard to click anywhere of screen. OpenCV based screenshot visual recognition. 
 
-> The **vi** in the name here can mean "Vim", "Vision" or whatever
+> The **vi** in the name here can mean "Vim", "Vision-recognition" or whatever
 
 ![screenshot](demo.gif)
 
@@ -26,8 +26,9 @@ This is still very simple and **in alpha preview** stage currently. Anything cou
 
 There're some known issues. Apparently there're many we can do to improve it (open for discussion) :
 
-- Algorithm (filtering, recognizing,  parameters... ) . If you don't have a high contrast GUI, or some icons or buttons don't have clear contour, it may fail to recognize them.
-- It's better to make it faster when using hi-res screens
+- Algorithm (filtering, recognizing,  parameters... ) . Currently, if you don't have a high contrast GUI, or some icons or buttons don't have clear contour, or two objects too close,  it may fail to recognize.
+
+- It's better to make it faster when using hi-res full-screens (in the future will apply grid selecting)
 
 ## Other vi / keybinding projects
 

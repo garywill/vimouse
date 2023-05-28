@@ -514,14 +514,23 @@ def resetRegions() :
     keypListFiltered = keypList
 
 
-# def fetch_screen_size() :
-#     global screenW, screenH
-#     root = tk.Tk()
-#     w = root.winfo_screenwidth()
-#     h = root.winfo_screenheight()
-#     screenW = w
-#     screenH = h
-#     root.destroy();
+def fetch_screen_size() :
+    global screenW, screenH
+    
+
+    app = QGuiApplication([])
+    screens = QGuiApplication.screens()
+
+    total_geometry = QRect()
+    for s in screens:
+        total_geometry = total_geometry.united(s.geometry())
+
+    print(total_geometry.x(), total_geometry.y(), total_geometry.width(), total_geometry.height())    
+    
+    w = total_geometry.width()
+    h = total_geometry.height()
+    screenW = w
+    screenH = h
 
 
 if __name__ == '__main__':
