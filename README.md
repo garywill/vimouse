@@ -10,11 +10,11 @@ Use keyboard to click anywhere of screen. OpenCV based screenshot visual recogni
 
 Dependencies:
 
-- python3 and: opencv , tkinter (tk/tcl) , pillow (with pillow-tk) , numpy , pynput
+- python3 and: opencv , qt5 , pillow , numpy , pynput
 
 Theoretically works cross-platform. Tested on Linux X11 and Windows.
 
-This is still very simple and **in alpha preview** stage currently. Anything could need or be rewritten and changed, including the programming language used.
+This is still very simple and **in alpha preview** stage currently. Anything could need or be rewritten and changed.
 
 ## Usage
 
@@ -26,9 +26,8 @@ This is still very simple and **in alpha preview** stage currently. Anything cou
 
 There're some known issues. Apparently there're many we can do to improve it (open for discussion) :
 
-- You're not seeing real-time screen change when the keys are shown,  it's actually showing a half-transparent screenshoted image borderless window
 - Algorithm (filtering, recognizing,  parameters... ) . If you don't have a high contrast GUI, or some icons or buttons don't have clear contour, it may fail to recognize them.
-- It's better to make it faster
+- It's better to make it faster when using hi-res screens
 
 ## Other vi / keybinding projects
 
