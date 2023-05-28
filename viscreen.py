@@ -16,18 +16,18 @@ screenH = 500
 # enable 'fetch_screen_size' in main() if you want it to cover whole screen
 
 
-fontsize = 10
+fontsize = 11
 
 # whether to do a click after moving the mouse cursor to a position
 autoClick = True
 # the window need some time to disappear
-autoClickDelay = 0.3 # unit: second
+autoClickDelay = 0.1 # unit: second
 
 
 # --------------------------
 
 
-import time
+import time, sys
 from pynput import keyboard
 from pynput.mouse import Button, Controller
 mouse = Controller()
@@ -37,20 +37,19 @@ import cv2 as cv
 cv2 = cv
 
 
-from PIL import ImageGrab, ImageTk
-import tkinter as tk
+from PIL import ImageGrab
 
+from PyQt5.QtWidgets import *
+from PyQt5.QtGui import *
+from PyQt5.QtCore import *
 
-
+from threading import Thread
 
 keyListener = None
 
 
-wdShow = False
 wd = None
 imgScrn = None
-imgTk = None
-canvas = None
 
 
 startKeysStatus = 0
@@ -77,31 +76,26 @@ letterList = list('ABCDEFGHJKLMNOPQRSTUVWXYZ234789[;/')
 
 
 def main():
-    global wd, wdShow
+    global wd
     
     # uncomment this to do for whole screen
     # fetch_screen_size()
     
-    print("creating window..")
-    createWindow(screenW, screenH)
-    print("hiding window..")
-    _hideWindow()
     
     print("starting key listener..")
     keyListenerStart(False)
     
     print("listening")
     
-    lastWdShow = wdShow
     while True :
-        time.sleep(0.05)
-        if lastWdShow != wdShow and wd :
-            if wdShow :
-                _showWindow()
-            else:
-                _hideWindow()
-                
-        lastWdShow = wdShow
+        try:
+            time.sleep(100)
+
+        except KeyboardInterrupt :
+            break
+
+    print('trying to exit window')
+    hideWindow()
         
 
 def keyListenerStart(suppress=False) :
@@ -221,12 +215,6 @@ def on_release(key):
 
 
 
-def putLabel(text,   x, y,  canvas=None) :
-    text_item = canvas.create_text(x, y , text=text, fill='#000000', font=('"" %d bold' % fontsize))
-    bbox = canvas.bbox(text_item)
-    rect_item = canvas.create_rectangle(bbox, fill="#f3e48c", outline="#0000ff")
-    canvas.tag_raise(text_item,rect_item)
-    # return label
 
 
 def destroyWindow () :
@@ -238,55 +226,164 @@ def destroyWindow () :
     showingScreen = False
     keypList = []
     
-    if wd :
-        wd.destroy()
-        wd=None
-    else :
-        print("no wd")
-    
-def showWindow() :
-    global wdShow
-    wdShow = True
+    wd.quit()
+    wd = None
+
     
 def hideWindow() :
-    global wdShow
-    wdShow = False
+    if not wd:
+        print('ERROR: hideWindow() called but no wd')
+        return
+    
+    destroyWindow()
 
     
-def _hideWindow() :
-    wd.withdraw()
-    canvas.delete('all')
     
-def _showWindow() :
-    global keypList
-    global imgScrn,  imgTk, canvas
+def showWindow() :
+    print('showWindow()')
+    if wd:
+        print('ERROR: showWindow() called but no wd')
+        return
     
-    imgTk = ImageTk.PhotoImage(imgScrn)
-    canvas.create_image(0, 0, image=imgTk, anchor=tk.NW)
-
-    for kpc in keypList :
-        putLabel(''.join(kpc['keyp']) ,  kpc['cord'][0] ,  kpc['cord'][1] , canvas = canvas)
-
-    wd.update()
-    wd.deiconify()
-    wd.update()
+    qtthread = Thread(target=createWindow, args=(screenW, screenH) )
+    qtthread.start()
     
-def createWindow(w, h) :
-    global wd, canvas
-    wd = tk.Tk()
-
-    wd.overrideredirect(True) # no border
-    wd.geometry("%dx%d" % (w,h ) )
+def createWindow(w,h):        
+    global wd
     
-    canvas = tk.Canvas(wd, width= screenW, height= screenH)
-    canvas.place(x=0, y=0)
-
-    wd.attributes('-topmost', 1)
-    wd.attributes('-alpha', 0.7)
-    wd.wait_visibility(wd)
-    wd.wm_attributes('-alpha',0.7)
+    if wd:
+        print('ERROR: createWindow() called but wd is not None')
+        return
     
+    wd = QApplication(sys.argv)
+    
+    tw = TransparentWidget(w,h)
+    tw.show()
+    
+    wd.exec_()
+    print('after app.exec_()')
 
+class TransparentWidget(QWidget):
+    def __init__(self,w,h):
+        print('QWidget subclass __init__', w,h)
+        
+        super().__init__()
+        
+
+        
+        
+        
+        # https://doc.qt.io/qt-5.15/qt.html#WidgetAttribute-enum
+        
+        # self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint | Qt.WindowTransparentForInput)
+        self.setWindowFlags(Qt.WindowTransparentForInput
+                            |Qt.X11BypassWindowManagerHint
+                            |Qt.WindowStaysOnTopHint
+                            |Qt.FramelessWindowHint
+                            # |Qt.WindowDoesNotAcceptFocus
+                            |Qt.CoverWindow
+                            )
+        
+        self.setAttribute(Qt.WA_TranslucentBackground, True)
+        self.setAttribute(Qt.WA_TransparentForMouseEvents, True)
+        # self.setAttribute(Qt.WA_AlwaysStackOnTop, True)
+
+
+        # # # 获取屏幕大小并设置窗口大小
+        # screen = QGuiApplication.primaryScreen()
+        # if screen is not None:
+        #     rect = screen.availableGeometry()
+        #     print(rect)
+        #     self.setGeometry(rect)
+            
+        self.setGeometry(QRect(0,0,w,h))
+        
+        
+
+        # 定时器每秒触发一次重绘
+        self.refreshTimer = QTimer(self)
+        self.refreshTimer.timeout.connect(self.refresh)
+        self.refreshTimer.start(2000)
+        
+        print('QWidget subclass __init__ finish')
+
+    def refresh(self) :
+        self.raise_()
+        self.update()
+        
+        # self.close()
+        # self.destroy()
+        # self.refreshTimer.stop()
+        # QApplication.quit()
+
+    def paintLabel(self, text, x, y):
+        qp = QPainter(self)
+        
+        qp.setFont ( QFont('Arial', fontsize, QFont.Bold) )
+        
+        metrics = qp.fontMetrics()
+        
+        w = metrics.width(text)
+        h = metrics.height()
+        # w=len(text)*8
+        h=fontsize
+        # print(w,h)
+        w_ex = 1
+        h_ex = 1
+        
+        ### pen外，brush内
+        
+        b_color = QColor(243,228,140, 180) #背景
+        r_color = QColor(0,0,255,100) #框
+        t_color=QColor(0,0,0, 200) # 字
+        
+        # 背景
+        # qp.setPen(b_color) 
+        qp.setBrush(b_color) 
+        qp.fillRect( x-w/2-w_ex  , y-h/2-h_ex , w+2*w_ex, h+2*h_ex  , b_color )
+        
+        # 框
+        qp.setPen(r_color)  
+        qp.setBrush(Qt.transparent)  
+        qp.drawRect( x-w/2-w_ex  , y-h/2-h_ex , w+2*w_ex, h+2*h_ex  )
+        
+        
+        qp.setPen(QPen(t_color))
+        qp.setBrush(QBrush(t_color))
+        qp.drawText( x-w/2       , y+h/2      ,      text)
+        
+        
+        
+        
+    def paintEvent(self, event):
+        print('QWidget subclass paintEvent')
+        
+        painter = QPainter(self)
+        
+        # 绘制矩形网格
+        width, height = self.width(), self.height()
+        n_rows, n_cols = 5, 6
+        n_rows, n_cols = 4, 8
+        cell_width, cell_height = width // n_cols, height // n_rows
+        pen = QPen(QColor(255,170,0, 127))
+        painter.setPen(pen)
+        painter.drawRect(0, 0, width - 1, height - 1)
+        for i in range(1, n_rows):
+            y = i * cell_height
+            painter.drawLine(0, y, width, y)
+        for j in range(1, n_cols):
+            x = j * cell_width
+            painter.drawLine(x, 0, x, height)
+        
+        
+        for kpc in keypList :
+            self.paintLabel(''.join(kpc['keyp']) ,  kpc['cord'][0] ,  kpc['cord'][1] )
+
+    def bye(self):
+        print("QWidget subclass bye()")
+        self.refreshTimer.stop()
+        self.close()
+        QApplication.quit()
 
 def invImg(img) :
     return cv2.bitwise_not(img)
@@ -417,14 +514,14 @@ def resetRegions() :
     keypListFiltered = keypList
 
 
-def fetch_screen_size() :
-    global screenW, screenH
-    root = tk.Tk()
-    w = root.winfo_screenwidth()
-    h = root.winfo_screenheight()
-    screenW = w
-    screenH = h
-    root.destroy();
+# def fetch_screen_size() :
+#     global screenW, screenH
+#     root = tk.Tk()
+#     w = root.winfo_screenwidth()
+#     h = root.winfo_screenheight()
+#     screenW = w
+#     screenH = h
+#     root.destroy();
 
 
 if __name__ == '__main__':
