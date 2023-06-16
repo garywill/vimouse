@@ -124,18 +124,18 @@ class TransparentWidget(QWidget):
         # 绘制窗口最外边框矩形
         painter.drawRect(0, 0, wdW - 1, wdH - 1)
         
-        # 画平均网格
-        cls = [ QColor(255, 255, 255, 127)  , QColor(255,170,0, 127), QColor(0,0,0, 127) ] 
-        for ic in range(len(cls)) :
-            cl = cls[ic]
-            pen = QPen(cl)
-            painter.setPen(pen)
-            for i in range(1, g.n_rows):
-                y = i * cell_height + (ic-1)
-                painter.drawLine(0, y, wdW, y)
-            for j in range(1, g.n_cols):
-                x = j * cell_width + (ic-1)
-                painter.drawLine(x, 0, x, wdH)
+        # # 画平均网格
+        # cls = [ QColor(255, 255, 255, 127)  , QColor(255,170,0, 127), QColor(0,0,0, 127) ] 
+        # for ic in range(len(cls)) :
+        #     cl = cls[ic]
+        #     pen = QPen(cl)
+        #     painter.setPen(pen)
+        #     for i in range(1, g.n_rows):
+        #         y = i * cell_height + (ic-1)
+        #         painter.drawLine(0, y, wdW, y)
+        #     for j in range(1, g.n_cols):
+        #         x = j * cell_width + (ic-1)
+        #         painter.drawLine(x, 0, x, wdH)
         
         
 
