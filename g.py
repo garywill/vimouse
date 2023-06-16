@@ -29,6 +29,10 @@ cells = {
     # 'A': {'x': 150, 'y': 200, 'w': 120, 'h': 120}, 
     # 'B': ...
 }
+curCellX=0
+curCellY=0
+curCellW=0
+curCellH=0
 
 
 keyListener = None

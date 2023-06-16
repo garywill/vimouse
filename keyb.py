@@ -49,8 +49,8 @@ def processKeyChar(char) :
             keyListenerStop()
             
             
-            x = matchKeyp['cord'][0]
-            y = matchKeyp['cord'][1]
+            x = g.curCellX + matchKeyp['cord'][0]
+            y = g.curCellY + matchKeyp['cord'][1]
             mouse.position = (g.scrX+x, g.scrY+y)
             
             screen_away()
@@ -68,6 +68,19 @@ def processKeyChar(char) :
             print( "presKeys len >= max")
             resetKeyPrsd()
             return
+        
+    elif g.showingScreen == 'grid': 
+        if char in g.cells.keys() :
+            hideWindow()
+            
+            g.curCellX = g.cells[char] ['x']
+            g.curCellY = g.cells[char] ['y']
+            g.curCellW = g.cells[char] ['w']
+            g.curCellH = g.cells[char] ['h']
+            
+            time.sleep(g.screenshotDelay/1000)
+            screen_do('keys')
+
 
 
 def on_press(key):
@@ -75,7 +88,7 @@ def on_press(key):
         g.startKeysStatus = 1
     elif not g.showingScreen and g.startKeysStatus == 1 and key == keyboard.Key.cmd  :
         keyListenerStop()
-        screen_do('keys')
+        screen_do('grid')
         g.startKeysStatus = 0
         keyListenerStart(True)
         return

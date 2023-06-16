@@ -141,7 +141,7 @@ class TransparentWidget(QWidget):
 
         if g.showingScreen == 'keys':
             for kpc in g.keypList :
-                self.paintLabel(''.join(kpc['keyp']) ,  kpc['cord'][0] ,  kpc['cord'][1] )
+                self.paintLabel(''.join(kpc['keyp']) ,  g.curCellX + kpc['cord'][0] , g.curCellY + kpc['cord'][1] )
                 
         elif g.showingScreen == 'grid':
             pen = QPen(QColor(255,170,0, 200))
@@ -160,6 +160,7 @@ class TransparentWidget(QWidget):
                 painter.setPen(pen)
                 painter.drawText(x + w//3 , y + h - h//4 , letter)
                 
+
 
     # def bye(self):
     #     print("QWidget subclass bye()")

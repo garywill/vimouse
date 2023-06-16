@@ -87,7 +87,13 @@ def screen_do(scrType) :
 
     resetKeyPrsd()
     
-    imgScrn = take_screenshot(g.scrX, g.scrY, g.scrW, g.scrH)
+    if scrType == 'keys': 
+        imgScrn = take_screenshot(g.scrX+g.curCellX, g.scrY+g.curCellY, g.curCellW, g.curCellH)
+        processScreenshot(imgScrn)
+    
+    showWindow()
+
+def processScreenshot(imgScrn):
     
     imgOrig = convertQImageToMat(imgScrn)
     
@@ -117,8 +123,7 @@ def screen_do(scrType) :
     imgMser, g.regions = mserImg(invImg(imgCls) , imgOrig)
     
     updateRegions(g.regions)
-    showWindow()
-
+    
 def take_screenshot(x, y, w, h):
     sc = None
     needCreate = False
