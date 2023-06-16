@@ -111,7 +111,7 @@ def take_screenshot(x, y, w, h):
         sc = QApplication([])
         
     # QScreen.grabWindow( sc.primaryScreen(), QApplication.desktop().winId() ) .save(filename, 'png') 
-    imgScrn = QScreen.grabWindow( sc.primaryScreen(), QApplication.desktop().winId() , g.scrX, g.scrY, g.scrW, g.scrH).toImage()
+    imgScrn = QScreen.grabWindow( sc.primaryScreen(), QApplication.desktop().winId() , x, y, w, h).toImage()
 
     if needCreate:
         sc.quit()
