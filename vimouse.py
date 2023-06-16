@@ -25,6 +25,7 @@ autoClick = True
 # the window need some time to disappear
 autoClickDelay = 0.1 # unit: second
 
+screenshotDelay = 100 # unit: ms 
 
 # --------------------------
 
@@ -79,7 +80,7 @@ def main():
     global wdapp
     
     # uncomment this to do for whole screen
-    fetch_screen_size()
+    # fetch_screen_size()
     
     print("starting key listener..")
     keyListenerStart(False)
@@ -177,7 +178,7 @@ def on_press(key):
         startKeysStatus = 1
     elif not showingScreen and startKeysStatus == 1 and key == keyboard.Key.cmd  :
         keyListenerStop()
-        screen_do()
+        screen_do('keys')
         startKeysStatus = 0
         keyListenerStart(True)
         return
@@ -379,31 +380,53 @@ class TransparentWidget(QWidget):
         qp.drawText( x-w/2       , y+h/2      ,      text)
         
         
-        
+    def hideEvent(self, event):
+        time.sleep(screenshotDelay/1000)
         
     def paintEvent(self, event):
-        print('QWidget subclass paintEvent')
-        
         painter = QPainter(self)
         
         # 绘制矩形网格
         width, height = self.width(), self.height()
         n_rows, n_cols = 5, 6
-        n_rows, n_cols = 4, 8
+        # n_rows, n_cols = 4, 8
         cell_width, cell_height = width // n_cols, height // n_rows
         pen = QPen(QColor(255,170,0, 127))
         painter.setPen(pen)
         painter.drawRect(0, 0, width - 1, height - 1)
-        for i in range(1, n_rows):
-            y = i * cell_height
-            painter.drawLine(0, y, width, y)
-        for j in range(1, n_cols):
-            x = j * cell_width
-            painter.drawLine(x, 0, x, height)
         
         
-        for kpc in keypList :
-            self.paintLabel(''.join(kpc['keyp']) ,  kpc['cord'][0] ,  kpc['cord'][1] )
+        cls = [ QColor(255, 255, 255, 127)  , QColor(255,170,0, 127), QColor(0,0,0, 127) ] 
+        for ic in range(len(cls)) :
+            cl = cls[ic]
+            pen = QPen(cl)
+            painter.setPen(pen)
+            for i in range(1, n_rows):
+                y = i * cell_height + (ic-1)
+                painter.drawLine(0, y, width, y)
+            for j in range(1, n_cols):
+                x = j * cell_width + (ic-1)
+                painter.drawLine(x, 0, x, height)
+        
+        
+
+        if showingScreen == 'keys':
+            for kpc in keypList :
+                self.paintLabel(''.join(kpc['keyp']) ,  kpc['cord'][0] ,  kpc['cord'][1] )
+        # elif showingScreen == 'grid':
+#         pen = QPen(QColor(255,170,0, 200))
+#         painter.setPen(pen)
+#         letterH = cell_height * 0.5
+#         for i in range(n_rows):
+#             for j in range(n_cols):
+#                 
+#                 x = j * cell_width + cell_width // 3
+#                 y = i * cell_height + cell_height - cell_height // 4
+#                 letter = str( letterList [ i * n_cols + j ] )
+#                 
+#                 painter.setFont( QFont('Arial', letterH, QFont.Bold) )
+#                 painter.setBrush(QBrush(QColor(255,170,0, 127)))
+#                 painter.drawText(x, y, letter)
 
     # def bye(self):
     #     print("QWidget subclass bye()")
@@ -466,10 +489,10 @@ def screen_away() :
     resetKeyPrsd()
     resetRegions()
 
-def screen_do() :
+def screen_do(scrType) :
     global showingScreen
     
-    showingScreen = True
+    showingScreen = scrType
 
     resetKeyPrsd()
     
