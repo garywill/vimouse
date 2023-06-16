@@ -119,7 +119,7 @@ def take_screenshot(x, y, w, h):
     return imgScrn
 
 
-def fetch_screen_size() :
+def get_desktop_size() :
     tmpapp = QGuiApplication([])
     screens = QGuiApplication.screens()
 
@@ -131,11 +131,10 @@ def fetch_screen_size() :
     
     w = total_geometry.width()
     h = total_geometry.height()
-    g.scrX = 0
-    g.scrY = 0
-    g.scrW = w
-    g.scrH = h
+
 
     tmpapp.quit()
+    
+    return [0, 0, w, h]
     
     

@@ -13,8 +13,10 @@ exec(open('impo.py').read())
 
 
 def main():
-    # uncomment this to do for whole screen
-    # fetch_screen_size()
+    if g.autoGetDesktopSize :
+        [g.scrX, g.scrY, g.scrW, g.scrH] = get_desktop_size()
+    
+    
     
     print("starting key listener..")
     keyListenerStart(False)

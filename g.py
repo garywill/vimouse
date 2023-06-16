@@ -5,7 +5,7 @@ scrX = 200
 scrY = 100
 scrW = 1100
 scrH = 500
-# enable 'fetch_screen_size' in main() if you want it to cover whole screen
+autoGetDesktopSize = False # enable this if you want to
 
 
 fontsize = 11
