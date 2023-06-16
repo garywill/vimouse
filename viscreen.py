@@ -47,7 +47,7 @@ from threading import Thread
 keyListener = None
 
 
-wd = None
+wdapp = None
 imgScrn = None
 
 
@@ -75,7 +75,7 @@ letterList = list('ABCDEFGHJKLMNOPQRSTUVWXYZ234789[;/')
 
 
 def main():
-    global wd
+    global wdapp
     
     # uncomment this to do for whole screen
     fetch_screen_size()
@@ -219,19 +219,19 @@ def on_release(key):
 def destroyWindow () :
     print("destroyWindow()")
     global showingScreen, keypList
-    global wd
+    global wdapp
     
     
     showingScreen = False
     keypList = []
     
-    wd.quit()
-    wd = None
+    wdapp.quit()
+    wdapp = None
 
     
 def hideWindow() :
-    if not wd:
-        print('ERROR: hideWindow() called but no wd')
+    if not wdapp:
+        print('ERROR: hideWindow() called but no wdapp')
         return
     
     destroyWindow()
@@ -240,26 +240,26 @@ def hideWindow() :
     
 def showWindow() :
     print('showWindow()')
-    if wd:
-        print('ERROR: showWindow() called but no wd')
+    if wdapp:
+        print('ERROR: showWindow() called but no wdapp')
         return
     
     qtthread = Thread(target=createWindow, args=(screenW, screenH) )
     qtthread.start()
     
 def createWindow(w,h):        
-    global wd
+    global wdapp
     
-    if wd:
-        print('ERROR: createWindow() called but wd is not None')
+    if wdapp:
+        print('ERROR: createWindow() called but wdapp is not None')
         return
     
-    wd = QApplication(sys.argv)
+    wdapp = QApplication(sys.argv)
     
     tw = TransparentWidget(w,h)
     tw.show()
     
-    wd.exec_()
+    wdapp.exec_()
     print('after app.exec_()')
 
 class TransparentWidget(QWidget):
