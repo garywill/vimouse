@@ -11,8 +11,10 @@
  
 
 # for debug not cover whole screen
-screenW = 1300
-screenH = 500
+scrX = 200
+scrY = 100
+scrW = 1100
+scrH = 500
 # enable 'fetch_screen_size' in main() if you want it to cover whole screen
 
 
@@ -149,7 +151,7 @@ def processKeyChar(char) :
         
         x = matchKeyp['cord'][0]
         y = matchKeyp['cord'][1]
-        mouse.position = (x, y)
+        mouse.position = (scrX+x, scrY+y)
         
         screen_away()
         
@@ -235,35 +237,33 @@ def destroyWindow () :
 
     
 def hideWindow() :
+    if wdapp:
+        wdapp.pub_hide.emit()
+    else:
+        print('WARN: hideWindow() called but no wdapp')
+        
     showingScreen = False
     keypList = []
     
-    if not wdapp:
-        print('ERROR: hideWindow() called but no wdapp')
-        return
-    
-    wdapp.pub_hide.emit()
-    
-
     
 def showWindow() :
     print('showWindow()')
     if wdapp:
         wdapp.pub_show.emit()
     else:
-        print('create qt thread and qtapplication')
-        qtthread = Thread(target=createWindow, args=(screenW, screenH) )
+        print('create thread for QtApplication')
+        qtthread = Thread(target=createWindow, args=(scrX, scrY, scrW, scrH) )
         qtthread.start()
     
     
-def createWindow(w,h):        
+def createWindow(x, y, w,h):        
     global wdapp
     
     if wdapp:
         print('ERROR: createWindow() called but wdapp is not None')
         return
     
-    wdapp = WdApp([w, h])
+    wdapp = WdApp([x, y, w, h])
     
     wdapp.pub_show.connect(wdapp.show)
     wdapp.pub_hide.connect(wdapp.hide)
@@ -283,7 +283,7 @@ class WdApp(QApplication) :
     def __init__(self, argv):
         super().__init__([])
         
-        self.wd = TransparentWidget(argv[0], argv[1])
+        self.wd = TransparentWidget(argv[0], argv[1], argv[2], argv[3] )
         
         
     def hide(self):
@@ -302,25 +302,18 @@ class WdApp(QApplication) :
 
 
 class TransparentWidget(QWidget):
-    def __init__(self,w,h):
-        print('QWidget subclass __init__', w,h)
-        
+    def __init__(self, x, y, w, h):
         super().__init__()
-        
-
-        
-        
         
         # https://doc.qt.io/qt-5.15/qt.html#WidgetAttribute-enum
         
-        # self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint | Qt.WindowTransparentForInput)
         self.setWindowFlags(Qt.WindowTransparentForInput
                             |Qt.X11BypassWindowManagerHint
                             |Qt.WindowStaysOnTopHint
                             |Qt.FramelessWindowHint
                             # |Qt.WindowDoesNotAcceptFocus
                             |Qt.CoverWindow
-                            )
+                        )
         
         self.setAttribute(Qt.WA_TranslucentBackground, True)
         self.setAttribute(Qt.WA_TransparentForMouseEvents, True)
@@ -334,8 +327,7 @@ class TransparentWidget(QWidget):
         #     print(rect)
         #     self.setGeometry(rect)
             
-        self.setGeometry(QRect(0,0,w,h))
-        
+        self.setGeometry(QRect(x,y,w,h))
         
 
         # 定时器每秒触发一次重绘
@@ -350,11 +342,6 @@ class TransparentWidget(QWidget):
         self.raise_()
         self.update()
         
-        # self.close()
-        # self.destroy()
-        # self.refreshTimer.stop()
-        # QApplication.quit()
-
     def paintLabel(self, text, x, y):
         qp = QPainter(self)
         
@@ -418,11 +405,11 @@ class TransparentWidget(QWidget):
         for kpc in keypList :
             self.paintLabel(''.join(kpc['keyp']) ,  kpc['cord'][0] ,  kpc['cord'][1] )
 
-    def bye(self):
-        print("QWidget subclass bye()")
-        self.refreshTimer.stop()
-        self.close()
-        QApplication.quit()
+    # def bye(self):
+    #     print("QWidget subclass bye()")
+    #     self.refreshTimer.stop()
+    #     self.close()
+    #     QApplication.quit()
 
 def invImg(img) :
     return cv2.bitwise_not(img)
@@ -486,7 +473,7 @@ def screen_do() :
 
     resetKeyPrsd()
     
-    imgScrn = take_screenshot(0, 0, screenW, screenH)
+    imgScrn = take_screenshot(scrX, scrY, scrW, scrH)
     
     imgOrig = convertQImageToMat(imgScrn)
     
@@ -529,7 +516,7 @@ def take_screenshot(x, y, w, h):
         sc = QApplication([])
         
     # QScreen.grabWindow( sc.primaryScreen(), QApplication.desktop().winId() ) .save(filename, 'png') 
-    imgScrn = QScreen.grabWindow( sc.primaryScreen(), QApplication.desktop().winId() , x, y, screenW, screenH).toImage()
+    imgScrn = QScreen.grabWindow( sc.primaryScreen(), QApplication.desktop().winId() , scrX, scrY, scrW, scrH).toImage()
 
     if needCreate:
         sc.quit()
@@ -586,7 +573,7 @@ def resetRegions() :
 
 
 def fetch_screen_size() :
-    global screenW, screenH
+    global scrX, scrY, scrW, scrH
     
 
     tmpapp = QGuiApplication([])
@@ -600,8 +587,10 @@ def fetch_screen_size() :
     
     w = total_geometry.width()
     h = total_geometry.height()
-    screenW = w
-    screenH = h
+    scrX = 0
+    scrY = 0
+    scrW = w
+    scrH = h
 
     tmpapp.quit()
 
