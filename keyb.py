@@ -27,46 +27,47 @@ def processKeyChar(char) :
     print("\n\nprocessKeyChar() char=%s" % char)
     char = char.upper()
     
-    g.prsdKeys.append(char)
-    print(g.prsdKeys)
-    
-    N = len(g.prsdKeys)-1
-    g.keypListFiltered = [x for x in g.keypListFiltered if x['keyp'][N] == char]
-    # print("\n g.keypListFiltered:")
-    # print(g.keypListFiltered)
-    print( len(g.keypListFiltered) )
-    
-    if not len(g.keypListFiltered) > 0 :
-        resetKeyPrsd()
-    
-    if len(g.keypListFiltered) == 1  :
-        print("hasMatch")
+    if g.showingScreen == 'keys': 
+        g.prsdKeys.append(char)
+        print(g.prsdKeys)
         
-        matchKeyp = g.keypListFiltered[0]
-        print(matchKeyp)
+        N = len(g.prsdKeys)-1
+        g.keypListFiltered = [x for x in g.keypListFiltered if x['keyp'][N] == char]
+        # print("\n g.keypListFiltered:")
+        # print(g.keypListFiltered)
+        print( len(g.keypListFiltered) )
         
-        keyListenerStop()
+        if not len(g.keypListFiltered) > 0 :
+            resetKeyPrsd()
         
+        if len(g.keypListFiltered) == 1  :
+            print("hasMatch")
+            
+            matchKeyp = g.keypListFiltered[0]
+            print(matchKeyp)
+            
+            keyListenerStop()
+            
+            
+            x = matchKeyp['cord'][0]
+            y = matchKeyp['cord'][1]
+            mouse.position = (g.scrX+x, g.scrY+y)
+            
+            screen_away()
+            
+            resetKeyPrsd()
+            
+            keyListenerStart(False)
+            
+            time.sleep(g.autoClickDelay)
+            if g.autoClick :
+                do_click()
+            
         
-        x = matchKeyp['cord'][0]
-        y = matchKeyp['cord'][1]
-        mouse.position = (g.scrX+x, g.scrY+y)
-        
-        screen_away()
-        
-        resetKeyPrsd()
-        
-        keyListenerStart(False)
-        
-        time.sleep(g.autoClickDelay)
-        if g.autoClick :
-            do_click()
-        
-    
-    if len(g.prsdKeys) >= g.LC :
-        print( "presKeys len >= max")
-        resetKeyPrsd()
-        return
+        if len(g.prsdKeys) >= g.LC :
+            print( "presKeys len >= max")
+            resetKeyPrsd()
+            return
 
 
 def on_press(key):
