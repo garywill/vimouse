@@ -86,7 +86,7 @@ class TransparentWidget(QWidget):
         h=g.fontsize
         # print(w,h)
         w_ex = 1
-        h_ex = 1
+        h_ex = 2
         
         ### pen外，brush内
         
