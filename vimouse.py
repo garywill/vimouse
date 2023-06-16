@@ -79,7 +79,6 @@ def main():
     # uncomment this to do for whole screen
     fetch_screen_size()
     
-    
     print("starting key listener..")
     keyListenerStart(False)
     
@@ -93,7 +92,12 @@ def main():
             break
 
     print('trying to exit window')
-    hideWindow()
+    try:
+        destroyWindow()
+    except:
+        pass
+    
+    sys.exit(0)
         
 
 def keyListenerStart(suppress=False) :
@@ -224,30 +228,33 @@ def destroyWindow () :
     global wdapp
     
     
-    showingScreen = False
-    keypList = []
+    hideWindow()
     
     wdapp.quit()
     wdapp = None
 
     
 def hideWindow() :
+    showingScreen = False
+    keypList = []
+    
     if not wdapp:
         print('ERROR: hideWindow() called but no wdapp')
         return
     
-    destroyWindow()
-
+    wdapp.pub_hide.emit()
     
+
     
 def showWindow() :
     print('showWindow()')
     if wdapp:
-        print('ERROR: showWindow() called but no wdapp')
-        return
+        wdapp.pub_show.emit()
+    else:
+        print('create qt thread and qtapplication')
+        qtthread = Thread(target=createWindow, args=(screenW, screenH) )
+        qtthread.start()
     
-    qtthread = Thread(target=createWindow, args=(screenW, screenH) )
-    qtthread.start()
     
 def createWindow(w,h):        
     global wdapp
@@ -256,13 +263,34 @@ def createWindow(w,h):
         print('ERROR: createWindow() called but wdapp is not None')
         return
     
-    wdapp = QApplication(sys.argv)
+    wdapp = WdApp([w, h])
     
-    tw = TransparentWidget(w,h)
-    tw.show()
+    wdapp.pub_show.connect(wdapp.show)
+    wdapp.pub_hide.connect(wdapp.hide)
+    
+    wdapp.pub_show.emit()
     
     wdapp.exec_()
     print('after app.exec_()')
+
+
+class WdApp(QApplication) :
+    pub_show = pyqtSignal()
+    pub_hide = pyqtSignal()
+    
+    def __init__(self, argv):
+        super().__init__([])
+        
+        self.wd = TransparentWidget(argv[0], argv[1])
+        
+        
+    def hide(self):
+        self.wd.hide()
+        
+    def show(self):
+        self.wd.refresh()
+        self.wd.show()
+
 
 class TransparentWidget(QWidget):
     def __init__(self,w,h):
@@ -481,11 +509,20 @@ def screen_do() :
     showWindow()
 
 def take_screenshot(x, y, w, h):
-    sc = QApplication([])
+    sc = None
+    needCreate = False
+    
+    if wdapp:
+        sc = wdapp
+    else:
+        needCreate = True
+        sc = QApplication([])
+        
     # QScreen.grabWindow( sc.primaryScreen(), QApplication.desktop().winId() ) .save(filename, 'png') 
     imgScrn = QScreen.grabWindow( sc.primaryScreen(), QApplication.desktop().winId() , x, y, screenW, screenH).toImage()
 
-    sc.quit()
+    if needCreate:
+        sc.quit()
     
     return imgScrn
     
