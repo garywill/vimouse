@@ -25,6 +25,10 @@ n_cols = 6
 # n_rows, n_cols = 4, 8
 
 
+cells = {
+    # 'A': {'x': 150, 'y': 200, 'w': 120, 'h': 120}, 
+    # 'B': ...
+}
 
 
 keyListener = None

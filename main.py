@@ -17,6 +17,7 @@ def main():
         [g.scrX, g.scrY, g.scrW, g.scrH] = get_desktop_size()
     
     
+    g.cells = genCells(g.scrX, g.scrY, g.scrW, g.scrH, g.n_rows, g.n_cols)
     
     print("starting key listener..")
     keyListenerStart(False)

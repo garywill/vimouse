@@ -116,15 +116,15 @@ class TransparentWidget(QWidget):
     def paintEvent(self, event):
         painter = QPainter(self)
         
-        # 绘制矩形网格
-        width, height = self.width(), self.height()
+        wdW, wdH = self.width(), self.height()
 
-        cell_width, cell_height = width // g.n_cols, height // g.n_rows
+        cell_width, cell_height = wdW // g.n_cols, wdH // g.n_rows
         pen = QPen(QColor(255,170,0, 127))
         painter.setPen(pen)
-        painter.drawRect(0, 0, width - 1, height - 1)
+        # 绘制窗口最外边框矩形
+        painter.drawRect(0, 0, wdW - 1, wdH - 1)
         
-        
+        # 画平均网格
         cls = [ QColor(255, 255, 255, 127)  , QColor(255,170,0, 127), QColor(0,0,0, 127) ] 
         for ic in range(len(cls)) :
             cl = cls[ic]
@@ -132,30 +132,34 @@ class TransparentWidget(QWidget):
             painter.setPen(pen)
             for i in range(1, g.n_rows):
                 y = i * cell_height + (ic-1)
-                painter.drawLine(0, y, width, y)
+                painter.drawLine(0, y, wdW, y)
             for j in range(1, g.n_cols):
                 x = j * cell_width + (ic-1)
-                painter.drawLine(x, 0, x, height)
+                painter.drawLine(x, 0, x, wdH)
         
         
 
         if g.showingScreen == 'keys':
             for kpc in g.keypList :
                 self.paintLabel(''.join(kpc['keyp']) ,  kpc['cord'][0] ,  kpc['cord'][1] )
-        # elif g.showingScreen == 'grid':
-#         pen = QPen(QColor(255,170,0, 200))
-#         painter.setPen(pen)
-#         letterH = cell_height * 0.5
-#         for i in range(g.n_rows):
-#             for j in range(g.n_cols):
-#                 
-#                 x = j * cell_width + cell_width // 3
-#                 y = i * cell_height + cell_height - cell_height // 4
-#                 letter = str( g.letterList [ i * g.n_cols + j ] )
-#                 
-#                 painter.setFont( QFont('Arial', letterH, QFont.Bold) )
-#                 painter.setBrush(QBrush(QColor(255,170,0, 127)))
-#                 painter.drawText(x, y, letter)
+                
+        elif g.showingScreen == 'grid':
+            pen = QPen(QColor(255,170,0, 200))
+            painter.setPen(pen)
+            letterH = cell_height * 0.5
+            for letter in g.cells :
+                obj = g.cells [ letter ]
+                x=obj['x']
+                y=obj['y']
+                w=obj['w']
+                h=obj['h']
+                painter.setBrush(QBrush(QColor(0,0,0, 0)))
+                painter.drawRect(x, y, w, h)
+                painter.setFont( QFont('Arial', letterH, QFont.Bold) )
+                painter.setBrush(QBrush(QColor(255,170,0, 127)))
+                painter.setPen(pen)
+                painter.drawText(x + w//3 , y + h - h//4 , letter)
+                
 
     # def bye(self):
     #     print("QWidget subclass bye()")

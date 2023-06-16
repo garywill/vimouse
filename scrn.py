@@ -2,6 +2,25 @@ from heads import *
 import g
 exec(open('impo.py').read())
 
+def genCells(X, Y, W, H, rows, cols) :
+    cells = {}
+    
+    cell_width = W // cols
+    cell_height = H // rows
+    
+    n = 0
+    for i in range(rows):
+        for j in range(cols):
+            letter = g.letterList [n]
+            cells[letter] = {
+                'x': j*cell_width , 
+                'y': i*cell_height , 
+                'w': cell_width, 
+                'h': cell_height, 
+            }
+            n += 1
+    
+    return cells
 
 
 def destroyWindow () :
