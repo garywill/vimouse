@@ -68,7 +68,7 @@ def mserImg(img, bgImg) :
     imgInput = img 
     mser = cv2.MSER_create(
         # delta = 40,
-        # min_area = 4,
+        min_area = 20,
         # max_area = 80000,
         # # max_variation = max_variation,
         # # min_diversity = .02,
