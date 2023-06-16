@@ -18,6 +18,8 @@ This is still very simple and **in alpha preview** stage currently. Anything cou
 
 ## Usage
 
+cd into folder and run `python3 main.py` to start.
+
 1. Hit `ctrl + meta` to find clickable objects on screen and show keys 
 
    > meta key = win key = super key
