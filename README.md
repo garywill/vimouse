@@ -32,13 +32,13 @@ cd into folder and run `python3 main.py` to start.
 
 3. It triggers click (if `autoClick=True`. Otherwise hit `meta + ctrl` to trigger click)
 
-> Open the file and configure for your need: whole screen, autoClick ...
+> Open the file and configure for your need: screenshotDelay, whole screen, autoClick ...
 
-There're some known issues. Apparently there're many we can do to improve it (open for discussion) :
 
-- Algorithm (filtering, recognizing,  parameters... ) . Currently, if you don't have a high contrast GUI, or some icons or buttons don't have clear contour, or two objects too close,  it may fail to recognize.
+Algorithm (filtering, recognizing,  parameters... ) can be improved. If you don't have a high contrast GUI, or some icons or buttons don't have clear contour, or two objects too close, it may fail to recognize.
 
-- It's better to make it faster when using hi-res full-screens (in the future will apply grid selecting)
+We're expecting experts comming !
+
 
 ## Other vi / keybinding projects
 

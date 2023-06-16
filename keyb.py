@@ -3,10 +3,15 @@ import g
 exec(open('impo.py').read())
  
  
+def delay_do_click():
+    time.sleep(g.autoClickDelay)
+    do_click()
  
 def do_click() :
     print("do_click()")
     mouse.click(Button.left, 1)
+
+
 
 def keyListenerStart(suppress=False) :
     g.keyListener = keyboard.Listener( on_press=on_press, on_release=on_release, suppress = suppress)
@@ -46,7 +51,6 @@ def processKeyChar(char) :
             matchKeyp = g.keypListFiltered[0]
             print(matchKeyp)
             
-            keyListenerStop()
             
             
             x = g.curCellX + matchKeyp['cord'][0]
@@ -57,11 +61,11 @@ def processKeyChar(char) :
             
             resetKeyPrsd()
             
-            keyListenerStart(False)
-            
-            time.sleep(g.autoClickDelay)
             if g.autoClick :
-                do_click()
+                th = Thread(target=delay_do_click, args=() )
+                th.start()
+
+            screen_do('grid')
             
         
         if len(g.prsdKeys) >= g.LC :

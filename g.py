@@ -1,10 +1,12 @@
   
+screenshotDelay = 100 # unit: ms 
 
 # for debug not cover whole screen
 scrX = 200
 scrY = 100
 scrW = 1100
 scrH = 500
+
 autoGetDesktopSize = False # enable this if you want to
 
 
@@ -15,7 +17,6 @@ autoClick = True
 # the window need some time to disappear
 autoClickDelay = 0.1 # unit: second
 
-screenshotDelay = 100 # unit: ms 
 
 # --------------------------
 
