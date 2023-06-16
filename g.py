@@ -20,6 +20,9 @@ screenshotDelay = 100 # unit: ms
 # --------------------------
 
 
+n_rows = 5
+n_cols = 6
+# n_rows, n_cols = 4, 8
 
 
 

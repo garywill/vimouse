@@ -118,9 +118,8 @@ class TransparentWidget(QWidget):
         
         # 绘制矩形网格
         width, height = self.width(), self.height()
-        n_rows, n_cols = 5, 6
-        # n_rows, n_cols = 4, 8
-        cell_width, cell_height = width // n_cols, height // n_rows
+
+        cell_width, cell_height = width // g.n_cols, height // g.n_rows
         pen = QPen(QColor(255,170,0, 127))
         painter.setPen(pen)
         painter.drawRect(0, 0, width - 1, height - 1)
@@ -131,10 +130,10 @@ class TransparentWidget(QWidget):
             cl = cls[ic]
             pen = QPen(cl)
             painter.setPen(pen)
-            for i in range(1, n_rows):
+            for i in range(1, g.n_rows):
                 y = i * cell_height + (ic-1)
                 painter.drawLine(0, y, width, y)
-            for j in range(1, n_cols):
+            for j in range(1, g.n_cols):
                 x = j * cell_width + (ic-1)
                 painter.drawLine(x, 0, x, height)
         
@@ -147,12 +146,12 @@ class TransparentWidget(QWidget):
 #         pen = QPen(QColor(255,170,0, 200))
 #         painter.setPen(pen)
 #         letterH = cell_height * 0.5
-#         for i in range(n_rows):
-#             for j in range(n_cols):
+#         for i in range(g.n_rows):
+#             for j in range(g.n_cols):
 #                 
 #                 x = j * cell_width + cell_width // 3
 #                 y = i * cell_height + cell_height - cell_height // 4
-#                 letter = str( g.letterList [ i * n_cols + j ] )
+#                 letter = str( g.letterList [ i * g.n_cols + j ] )
 #                 
 #                 painter.setFont( QFont('Arial', letterH, QFont.Bold) )
 #                 painter.setBrush(QBrush(QColor(255,170,0, 127)))
