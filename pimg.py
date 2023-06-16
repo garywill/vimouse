@@ -29,8 +29,8 @@ def updateRegions(newRegions) :
         p = g.regions [i]
         xmax, ymax = np.amax(p, axis=0)
         xmin, ymin = np.amin(p, axis=0)
-        pointX = (xmax+xmin)/2
-        pointY = (ymax+ymin)/2
+        pointX = (xmax+xmin)//2
+        pointY = (ymax+ymin)//2
         keyp = []
         for j in range(0, g.LC) :
             l = str ( g.letterList[ int( i / pow( len(g.letterList), j) ) % pow( len(g.letterList), j+1) ] ) 

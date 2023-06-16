@@ -97,17 +97,17 @@ class TransparentWidget(QWidget):
         # 背景
         # qp.setPen(b_color) 
         qp.setBrush(b_color) 
-        qp.fillRect( x-w/2-w_ex  , y-h/2-h_ex , w+2*w_ex, h+2*h_ex  , b_color )
+        qp.fillRect( x-w//2-w_ex  , y-h//2-h_ex , w+2*w_ex, h+2*h_ex  , b_color )
         
         # 框
         qp.setPen(r_color)  
         qp.setBrush(Qt.transparent)  
-        qp.drawRect( x-w/2-w_ex  , y-h/2-h_ex , w+2*w_ex, h+2*h_ex  )
+        qp.drawRect( x-w//2-w_ex  , y-h//2-h_ex , w+2*w_ex, h+2*h_ex  )
         
         
         qp.setPen(QPen(t_color))
         qp.setBrush(QBrush(t_color))
-        qp.drawText( x-w/2       , y+h/2      ,      text)
+        qp.drawText( x-w//2       , y+h//2      ,      text)
         
         
     def hideEvent(self, event):
