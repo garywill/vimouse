@@ -230,7 +230,7 @@ def destroyWindow () :
     
     hideWindow()
     
-    wdapp.quit()
+    wdapp.pub_quit.emit()
     wdapp = None
 
     
@@ -267,6 +267,7 @@ def createWindow(w,h):
     
     wdapp.pub_show.connect(wdapp.show)
     wdapp.pub_hide.connect(wdapp.hide)
+    wdapp.pub_quit.connect(wdapp.slot_quit)
     
     wdapp.pub_show.emit()
     
@@ -277,6 +278,7 @@ def createWindow(w,h):
 class WdApp(QApplication) :
     pub_show = pyqtSignal()
     pub_hide = pyqtSignal()
+    pub_quit = pyqtSignal()
     
     def __init__(self, argv):
         super().__init__([])
@@ -286,10 +288,17 @@ class WdApp(QApplication) :
         
     def hide(self):
         self.wd.hide()
+        self.wd.refreshTimer.stop()
         
     def show(self):
         self.wd.refresh()
         self.wd.show()
+        self.wd.refreshTimer.start()
+        
+    def slot_quit(self):
+        self.wd.refreshTimer.stop()
+        self.wd.close()
+        self.quit()
 
 
 class TransparentWidget(QWidget):
@@ -337,6 +346,7 @@ class TransparentWidget(QWidget):
         print('QWidget subclass __init__ finish')
 
     def refresh(self) :
+        print('refresh()')
         self.raise_()
         self.update()
         
