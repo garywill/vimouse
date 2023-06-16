@@ -48,7 +48,6 @@ keyListener = None
 
 
 wdapp = None
-imgScrn = None
 
 
 startKeysStatus = 0
@@ -102,10 +101,13 @@ def keyListenerStart(suppress=False) :
     
     keyListener = keyboard.Listener( on_press=on_press, on_release=on_release, suppress = suppress)
     keyListener.start()
+    if suppress:
+        print('key listener: NOW BLOCKING KEY EVENTS BEING SENT TO OTHER APPS, until key badges dismiss')
 
 def keyListenerStop() :
     global keyListener
     keyListener.stop()
+    print('key listener stop or reset...')
 
 def resetKeyPrsd() :
     global  prsdKeys, keypListFiltered
@@ -441,7 +443,6 @@ def screen_away() :
 
 def screen_do() :
     global showingScreen
-    global imgScrn
     
     showingScreen = True
 
