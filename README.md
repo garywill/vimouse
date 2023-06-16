@@ -14,12 +14,20 @@ Dependencies:
 
 Theoretically works cross-platform. Tested on Linux X11 and Windows.
 
-This is still very simple and **in alpha preview** stage currently. Anything could need or be rewritten and changed.
+This is still very simple and **in alpha preview** stage currently. Anything could change.
 
 ## Usage
 
-1. Hit `ctrl + meta` to find clickable objects on screen and show keys (meta key = win key = super key)
-2. Press some keys to move mouse to that position
+1. Hit `ctrl + meta` to find clickable objects on screen and show keys 
+
+   > meta key = win key = super key
+
+   > During keys shown, any key events are blocked from being sent to any other apps 
+   
+   To cancel, press ESC
+   
+2. Press keys to move mouse to that position
+
 3. It triggers click (if `autoClick=True`. Otherwise hit `meta + ctrl` to trigger click)
 
 > Open the file and configure for your need: whole screen, autoClick ...
