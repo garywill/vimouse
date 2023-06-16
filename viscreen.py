@@ -37,7 +37,6 @@ import cv2 as cv
 cv2 = cv
 
 
-from PIL import ImageGrab
 
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
@@ -79,7 +78,7 @@ def main():
     global wd
     
     # uncomment this to do for whole screen
-    # fetch_screen_size()
+    fetch_screen_size()
     
     
     print("starting key listener..")
@@ -448,9 +447,11 @@ def screen_do() :
 
     resetKeyPrsd()
     
-    imgScrn = ImageGrab.grab((0, 0, screenW, screenH))
+    imgScrn = take_screenshot(0, 0, screenW, screenH)
     
-    imgOrig = np.asarray(imgScrn)
+    imgOrig = convertQImageToMat(imgScrn)
+    
+    # imgOrig = np.asarray(imgScrn)
     imgGray = cv2.cvtColor(imgOrig, cv2.COLOR_BGR2GRAY)
     
     #  C>0 以 白底黑字 方式做二值 输出是 白底黑字+反色的被描边
@@ -477,7 +478,29 @@ def screen_do() :
     
     updateRegions(regions)
     showWindow()
+
+def take_screenshot(x, y, w, h):
+    sc = QApplication([])
+    # QScreen.grabWindow( sc.primaryScreen(), QApplication.desktop().winId() ) .save(filename, 'png') 
+    imgScrn = QScreen.grabWindow( sc.primaryScreen(), QApplication.desktop().winId() , x, y, screenW, screenH).toImage()
+
+    sc.quit()
     
+    return imgScrn
+    
+def convertQImageToMat(incomingImage):
+    '''  Converts a QImage into an opencv MAT format  '''
+
+    incomingImage = incomingImage.convertToFormat(4)
+
+    width = incomingImage.width()
+    height = incomingImage.height()
+
+    ptr = incomingImage.bits()
+    ptr.setsize(incomingImage.byteCount())
+    arr = np.array(ptr).reshape(height, width, 4)  #  Copies the data
+    return arr
+
 def updateRegions(newRegions) :    
     global regions, LC, keypList, keypListFiltered
     regions = newRegions
@@ -518,7 +541,7 @@ def fetch_screen_size() :
     global screenW, screenH
     
 
-    app = QGuiApplication([])
+    tmpapp = QGuiApplication([])
     screens = QGuiApplication.screens()
 
     total_geometry = QRect()
@@ -532,6 +555,7 @@ def fetch_screen_size() :
     screenW = w
     screenH = h
 
+    tmpapp.quit()
 
 if __name__ == '__main__':
     main()

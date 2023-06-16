@@ -10,7 +10,7 @@ Use keyboard to click anywhere of screen. OpenCV based screenshot visual recogni
 
 Dependencies:
 
-- python3 and: opencv , qt5 , pillow , numpy , pynput
+- python3 and: opencv , qt5 , numpy , pynput
 
 Theoretically works cross-platform. Tested on Linux X11 and Windows.
 
