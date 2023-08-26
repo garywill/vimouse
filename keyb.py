@@ -133,14 +133,25 @@ def on_press(key):
     
 
 def on_release(key):
-    if g.clickKeysStatus == 2 and ( key == keyboard.Key.ctrl or key == keyboard.Key.ctrl_l ) :
+    if not (key == keyboard.Key.cmd or (key == keyboard.Key.ctrl or key == keyboard.Key.ctrl_l) ):
+        g.clickKeysStatus = 0
+        g.startKeysStatus = 0
+    
+    if g.clickKeysStatus == 2 and ( ( key == keyboard.Key.ctrl or key == keyboard.Key.ctrl_l ) or key == keyboard.Key.cmd ):
+        g.clickKeysStatus = 3
+        
+        g.startKeysStatus = 0
+        return
+        
+    if g.clickKeysStatus == 3 and ( ( key == keyboard.Key.ctrl or key == keyboard.Key.ctrl_l ) or key == keyboard.Key.cmd ):
         do_click()
         g.clickKeysStatus = 0
         
-    g.startKeysStatus = 0
+        g.startKeysStatus = 0
+        return
+        
     
-    if key != keyboard.Key.cmd :
-        g.clickKeysStatus = 0
+
 
 
 
