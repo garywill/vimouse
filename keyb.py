@@ -110,6 +110,12 @@ def on_press(key):
         keyListenerStart(False)
         return
     
+    if key == keyboard.Key.backspace and g.showingScreen == 'keys':
+        screen_away()
+        resetKeyPrsd()
+        screen_do('grid')
+        return
+        
     if g.showingScreen :
         char = 0
         try:

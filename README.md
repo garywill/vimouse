@@ -26,7 +26,7 @@ cd into folder and run `python3 main.py` to start.
 
    > During keys shown, any key events are blocked from being sent to any other apps 
    
-   To cancel, press ESC or `,`(comma)
+   To cancel, press ESC or `,`(comma). To return to last step, press backspace
    
 2. Press keys to move mouse to that position
 
