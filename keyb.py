@@ -91,6 +91,10 @@ def processKeyChar(char) :
 
 
 def on_press(key):
+    if not ( is_ctrl_key(key) or is_cmd_key(key) ):
+        g.clickKeysStatus = 0
+        g.startKeysStatus = 0
+    
     # print(key)
     if not g.showingScreen and is_ctrl_key(key) and g.startKeysStatus == 0 :
         g.startKeysStatus = 1
