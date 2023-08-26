@@ -143,22 +143,37 @@ def take_screenshot(x, y, w, h):
     return imgScrn
 
 
+
 def get_desktop_size() :
     tmpapp = QGuiApplication([])
-    screens = QGuiApplication.screens()
+    # screens = QGuiApplication.screens()
 
-    total_geometry = QRect()
-    for s in screens:
-        total_geometry = total_geometry.united(s.geometry())
-
-    print(total_geometry.x(), total_geometry.y(), total_geometry.width(), total_geometry.height())    
+    # total_geometry = QRect()
+    # for s in screens:
+    #     total_geometry = total_geometry.united(s.geometry())
     
-    w = total_geometry.width()
-    h = total_geometry.height()
+#     print(total_geometry.x(), total_geometry.y(), total_geometry.width(), total_geometry.height())    
+#     
+#     w = total_geometry.width()
+#     h = total_geometry.height()
 
+    # # 获取屏幕大小并设置窗口大小
+    screen = QGuiApplication.primaryScreen()
+    if screen is not None:
+        rect = screen.availableGeometry()
+        print(rect)
+    else:
+        print('ERROR: failed to get primary screen')
+
+    x = rect.x()
+    y = rect.y()
+    w = rect.width()
+    h = rect.height()
 
     tmpapp.quit()
+
+
     
-    return [0, 0, w, h]
+    return [x, y, w, h]
     
     
