@@ -164,7 +164,13 @@ class TransparentWidget(QWidget):
                     
                     painter.drawRect(x+ic, y+ic, w-ic*2, h-ic*2)
                 
-                painter.setFont( QFont('Arial', letterH, QFont.Bold) )
+                font = QFont('Arial', letterH, QFont.Bold)
+                painter.setFont( font )
+                
+                path = QPainterPath()
+                path.addText(QPoint(x + w//3 , y + h - h//4 ), font, letter)
+                painter.strokePath(path, QPen( QColor(255,255,255,127), 3))
+                painter.strokePath(path, QPen( QColor(0,0,0,127), 2))
                 painter.setBrush(QBrush(QColor(255,170,0, 127)))
                 painter.setPen(pen_t)
                 painter.drawText(x + w//3 , y + h - h//4 , letter)
