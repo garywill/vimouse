@@ -68,3 +68,5 @@ keypListFiltered = []
 
 letterList = list('ABCDEFGHJKLMNOPQRSTUVWXYZ234789')
 
+
+needIgnoreKeyUp = None

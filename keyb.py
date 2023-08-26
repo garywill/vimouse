@@ -120,7 +120,7 @@ def on_press(key):
         screen_do('grid')
         return
         
-    if g.showingScreen :
+    if g.showingScreen == 'grid':
         char = 0
         try:
             char = key.char
@@ -129,6 +129,7 @@ def on_press(key):
             pass
     
         if char :
+            g.needIgnoreKeyUp = char
             processKeyChar(char)
     
 
@@ -143,5 +144,18 @@ def on_release(key):
         g.clickKeysStatus = 0
 
 
+    if g.showingScreen == 'keys':
+        char = 0
+        try:
+            char = key.char
+        except:
+            # print("key no char")
+            pass
+    
+        if char :
+            if not g.needIgnoreKeyUp == None and g.needIgnoreKeyUp == char:
+                g.needIgnoreKeyUp = None
+            else:
+                processKeyChar(char)
 
 
