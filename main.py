@@ -13,6 +13,14 @@ exec(open('impo.py').read())
 
 
 def main():
+    print('vimouse')
+    print('  alpha preview version. User can edit g.py to customize')
+    
+    if not g.autoGetDesktopSize :
+        print('autoGetDesktopSize not enabled. Running with only a part of user screen for debug purpose')
+        
+    print('')
+    
     if g.autoGetDesktopSize :
         [g.scrX, g.scrY, g.scrW, g.scrH] = get_desktop_size()
     
@@ -22,7 +30,7 @@ def main():
     print("starting key listener..")
     keyListenerStart(False)
     
-    print("listening")
+    print("listening. Hit ctrl+win to start")
     
     while True :
         try:

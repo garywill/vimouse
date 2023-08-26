@@ -12,7 +12,7 @@ Dependencies:
 
 - python3 and: opencv , qt5 , numpy , pynput
 
-Theoretically works cross-platform. Tested on Linux X11 and Windows.
+Theoretically works cross-platform. Tested on Linux X11 and Windows. Welcome feedback the result on your machine.
 
 This is still very simple and **in alpha preview** stage currently. Anything could change.
 

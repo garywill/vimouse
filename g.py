@@ -1,4 +1,7 @@
   
+########## user can edit #####
+
+# the window need some time to disappear
 screenshotDelay = 100 # unit: ms 
 
 # for debug not cover whole screen
@@ -10,7 +13,6 @@ scrH = 500
 # enable this if you want to. 
 autoGetDesktopSize = False
 # autoGetDesktopSize = True
-
 # If it doesn't fetch your desktop size correctly, 
 # disable it and manually fill your resolution into above
 
@@ -19,12 +21,11 @@ fontsize = 11
 
 # whether to do a click after moving the mouse cursor to a position
 autoClick = True
-# the window need some time to disappear
 autoClickDelay = 0.1 # unit: second
 
 
 # --------------------------
-
+# it's NOT recommended user to edit below
 
 n_rows = 5
 n_cols = 6
