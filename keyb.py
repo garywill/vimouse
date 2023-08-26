@@ -60,7 +60,7 @@ def processKeyChar(char) :
             y = g.curCellY + matchKeyp['cord'][1]
             mouse.position = (g.scrX+x, g.scrY+y)
             
-            screen_away()
+            # screen_away()
             
             resetKeyPrsd()
             
@@ -91,6 +91,7 @@ def processKeyChar(char) :
 
 
 def on_press(key):
+    # print(key)
     if not g.showingScreen and ( key == keyboard.Key.ctrl or key == keyboard.Key.ctrl_l ) and g.startKeysStatus == 0 :
         g.startKeysStatus = 1
     elif not g.showingScreen and g.startKeysStatus == 1 and key == keyboard.Key.cmd  :
@@ -114,7 +115,7 @@ def on_press(key):
         return
     
     if key == keyboard.Key.backspace and g.showingScreen == 'keys':
-        screen_away()
+        # screen_away()
         resetKeyPrsd()
         screen_do('grid')
         return
