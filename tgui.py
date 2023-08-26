@@ -64,12 +64,11 @@ class TransparentWidget(QWidget):
         # 定时器每秒触发一次重绘
         self.refreshTimer = QTimer(self)
         self.refreshTimer.timeout.connect(self.refresh)
-        self.refreshTimer.start(2000)
+        self.refreshTimer.start(300)
         
         print('QWidget subclass __init__ finish')
 
     def refresh(self) :
-        print('refresh()')
         self.raise_()
         self.update()
         
