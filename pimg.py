@@ -25,21 +25,44 @@ def updateRegions(newRegions) :
             break
     print(g.LC)
     g.keypList = []
+    
+    keyps = []
+    for i in range(0, len(g.regions) ) :
+        keyp = []
+        for j in range(0, g.LC) :
+            n = int( i / pow( len(g.letterList), j) ) % pow( len(g.letterList), j+1) 
+            letter = str ( g.letterList[n] ) 
+            keyp.append(letter)
+        keyps.append(keyp)
+    for i in range(0, len(g.regions) ) :
+        keyp = keyps[i]
+        
+        similars = keyps
+        print(similars)
+        for k in range(0, len(keyp) ):
+            print('k=',k)
+            letter = keyp[k]
+            similars = [x for x in similars if ( len(x) >= k and x[k] == letter ) ]
+            if len(similars) <= 1:
+                keyps[i] = keyp[0:k+1]
+                break
+            
+    
     for i in range(0, len(g.regions) ) :
         p = g.regions [i]
         xmax, ymax = np.amax(p, axis=0)
         xmin, ymin = np.amin(p, axis=0)
         pointX = (xmax+xmin)//2
         pointY = (ymax+ymin)//2
-        keyp = []
-        for j in range(0, g.LC) :
-            l = str ( g.letterList[ int( i / pow( len(g.letterList), j) ) % pow( len(g.letterList), j+1) ] ) 
-            keyp.insert (0, l)
+
         g.keypList.append( {
-            "keyp": keyp, 
+            "keyp": keyps [ i ], 
             "cord": [pointX, pointY]
             } )
         # print("i=%d, keyp=%s" % (i, ''.join(keyp) ) )
+
+        
+        
     g.keypListFiltered = g.keypList
     
     
