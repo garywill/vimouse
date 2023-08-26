@@ -33,7 +33,7 @@ def updateRegions(newRegions) :
             n = int( i / pow( len(g.letterList), j) ) % pow( len(g.letterList), j+1) 
             letter = str ( g.letterList[n] ) 
             keyp.append(letter)
-        keyps.append(keyp)
+        keyps.append(''.join(keyp))
     for i in range(0, len(g.regions) ) :
         keyp = keyps[i]
         
