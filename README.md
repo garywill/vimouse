@@ -32,7 +32,7 @@ cd into folder and run `python3 main.py` to start.
 
 3. It triggers click (if `autoClick=True`. Otherwise hit `meta + ctrl` to trigger click)
 
-> Open the file and configure for your need: screenshotDelay, whole screen, autoClick ...
+> Edit file `g.py` and configure for your need: screenshotDelay, whole screen, autoClick ...
 
 
 Algorithm (filtering, recognizing,  parameters... ) can be improved. If you don't have a high contrast GUI, or some icons or buttons don't have clear contour, or two objects too close, it may fail to recognize.

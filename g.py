@@ -2,12 +2,17 @@
 screenshotDelay = 100 # unit: ms 
 
 # for debug not cover whole screen
-scrX = 200
-scrY = 100
+scrX = 0
+scrY = 0
 scrW = 1100
 scrH = 500
 
-autoGetDesktopSize = False # enable this if you want to
+# enable this if you want to. 
+autoGetDesktopSize = False
+# autoGetDesktopSize = True
+
+# If it doesn't fetch your desktop size correctly, 
+# disable it and manually fill your resolution into above
 
 
 fontsize = 11
