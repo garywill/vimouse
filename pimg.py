@@ -18,29 +18,36 @@ def convertQImageToMat(incomingImage):
 
 def updateRegions(newRegions) :    
     g.regions = newRegions
-    print( len (g.regions) )
+    
+    len_of_letterList = len(g.letterList)
+    len_of_regions = len(g.regions)
+    
+    print( len (g.regions) , 'regions')
     g.LC = 0
     for g.LC in range(1, 10) :
-        if pow( len(g.letterList) , g.LC) >= len(g.regions) :
+        if pow( len_of_letterList , g.LC) >= len_of_regions :
             break
-    print(g.LC)
+    print('LC=', g.LC)
     g.keypList = []
     
+    
+    
+    
+    
+    
     keyps = []
-    for i in range(0, len(g.regions) ) :
+    for i in range(0, len_of_regions ) :
         keyp = []
         for j in range(0, g.LC) :
-            n = int( i / pow( len(g.letterList), j) ) % pow( len(g.letterList), j+1) 
+            n = int( i / pow( len_of_letterList, j) ) % pow( len_of_letterList, j+1) 
             letter = str ( g.letterList[n] ) 
             keyp.append(letter)
         keyps.append(''.join(keyp))
-    for i in range(0, len(g.regions) ) :
+    for i in range(0, len_of_regions ) :
         keyp = keyps[i]
         
         similars = keyps
-        print(similars)
         for k in range(0, len(keyp) ):
-            print('k=',k)
             letter = keyp[k]
             similars = [x for x in similars if ( len(x) >= k and x[k] == letter ) ]
             if len(similars) <= 1:
@@ -48,7 +55,7 @@ def updateRegions(newRegions) :
                 break
             
     
-    for i in range(0, len(g.regions) ) :
+    for i in range(0, len_of_regions ) :
         p = g.regions [i]
         xmax, ymax = np.amax(p, axis=0)
         xmin, ymin = np.amin(p, axis=0)
