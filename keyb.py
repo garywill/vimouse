@@ -92,18 +92,18 @@ def processKeyChar(char) :
 
 def on_press(key):
     # print(key)
-    if not g.showingScreen and ( key == keyboard.Key.ctrl or key == keyboard.Key.ctrl_l ) and g.startKeysStatus == 0 :
+    if not g.showingScreen and is_ctrl_key(key) and g.startKeysStatus == 0 :
         g.startKeysStatus = 1
-    elif not g.showingScreen and g.startKeysStatus == 1 and key == keyboard.Key.cmd  :
+    elif not g.showingScreen and g.startKeysStatus == 1 and is_cmd_key(key)  :
         keyListenerStop()
         screen_do('grid')
         g.startKeysStatus = 0
         keyListenerStart(True)
         return
         
-    if key == keyboard.Key.cmd and g.clickKeysStatus == 0  :
+    if is_cmd_key(key) and g.clickKeysStatus == 0  :
         g.clickKeysStatus = 1
-    elif g.clickKeysStatus == 1 and ( key == keyboard.Key.ctrl or key == keyboard.Key.ctrl_l )  :
+    elif g.clickKeysStatus == 1 and is_ctrl_key(key)  :
         g.clickKeysStatus = 2
         return
         
@@ -133,17 +133,17 @@ def on_press(key):
     
 
 def on_release(key):
-    if not (key == keyboard.Key.cmd or (key == keyboard.Key.ctrl or key == keyboard.Key.ctrl_l) ):
+    if not ( is_ctrl_key(key) or is_cmd_key(key) ):
         g.clickKeysStatus = 0
         g.startKeysStatus = 0
     
-    if g.clickKeysStatus == 2 and ( ( key == keyboard.Key.ctrl or key == keyboard.Key.ctrl_l ) or key == keyboard.Key.cmd ):
+    if g.clickKeysStatus == 2 and ( is_ctrl_key(key) or is_cmd_key(key) ):
         g.clickKeysStatus = 3
         
         g.startKeysStatus = 0
         return
         
-    if g.clickKeysStatus == 3 and ( ( key == keyboard.Key.ctrl or key == keyboard.Key.ctrl_l ) or key == keyboard.Key.cmd ):
+    if g.clickKeysStatus == 3 and ( is_ctrl_key(key) or is_cmd_key(key) ):
         do_click()
         g.clickKeysStatus = 0
         
@@ -151,8 +151,20 @@ def on_release(key):
         return
         
     
+def is_ctrl_key(key):
+    if key in [ 
+             keyboard.Key.ctrl,
+             keyboard.Key.ctrl_l
+    ] :
+        return True
+    else:
+        return False
 
-
+def is_cmd_key(key):
+    if key == keyboard.Key.cmd:
+        return True
+    else:
+        return False
 
 
 
