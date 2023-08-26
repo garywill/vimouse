@@ -146,7 +146,7 @@ class TransparentWidget(QWidget):
         elif g.showingScreen == 'grid':
             pen = QPen(QColor(255,170,0, 200))
             painter.setPen(pen)
-            letterH = cell_height * 0.5
+            letterH = int(cell_height * 0.5)
             for letter in g.cells :
                 obj = g.cells [ letter ]
                 x=obj['x']
