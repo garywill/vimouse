@@ -95,10 +95,7 @@ def on_press(key):
     if not g.showingScreen and is_ctrl_key(key) and g.startKeysStatus == 0 :
         g.startKeysStatus = 1
     elif not g.showingScreen and g.startKeysStatus == 1 and is_cmd_key(key)  :
-        keyListenerStop()
         screen_do('grid')
-        g.startKeysStatus = 0
-        keyListenerStart(True)
         return
         
     if is_cmd_key(key) and g.clickKeysStatus == 0  :
@@ -149,6 +146,22 @@ def on_release(key):
         
         g.startKeysStatus = 0
         return
+    
+    
+    if g.startKeysStatus == 1 and ( is_ctrl_key(key) or is_cmd_key(key) ):
+        g.startKeysStatus = 2
+        
+        g.clickKeysStatus = 0
+        return
+    
+    if g.startKeysStatus == 2 and ( is_ctrl_key(key) or is_cmd_key(key) ):
+        keyListenerStop()
+        g.startKeysStatus = 0
+        keyListenerStart(True)
+        
+        g.clickKeysStatus = 0
+        return
+    
         
     
 def is_ctrl_key(key):
