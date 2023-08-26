@@ -100,7 +100,6 @@ def on_press(key):
         g.startKeysStatus = 1
     elif not g.showingScreen and g.startKeysStatus == 1 and is_cmd_key(key)  :
         g.startKeysStatus = 2
-        screen_do('grid')
         return
         
     if is_cmd_key(key) and g.clickKeysStatus == 0  :
@@ -163,6 +162,7 @@ def on_release(key):
         keyListenerStop()
         g.startKeysStatus = 0
         keyListenerStart(True)
+        screen_do('grid')
         
         g.clickKeysStatus = 0
         return
