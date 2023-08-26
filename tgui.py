@@ -143,8 +143,9 @@ class TransparentWidget(QWidget):
                 
                 
         elif g.showingScreen == 'grid':
-            pen = QPen(QColor(255,170,0, 200))
-            painter.setPen(pen)
+            cls = [ QColor(255, 255, 255, 127)  , QColor(255,170,0, 127), QColor(0,0,0, 127) ] # 网格颜色
+            pen_t = QPen(QColor(255,170,0, 200)) # 字颜色
+            
             letterH = int(cell_height * 0.5)
             for letter in g.cells :
                 obj = g.cells [ letter ]
@@ -152,11 +153,16 @@ class TransparentWidget(QWidget):
                 y=obj['y']
                 w=obj['w']
                 h=obj['h']
-                painter.setBrush(QBrush(QColor(0,0,0, 0)))
-                painter.drawRect(x, y, w, h)
+                for ic in range(len(cls)):
+                    cl = cls[ic]
+                    painter.setPen(QPen(cl))
+                    painter.setBrush(QBrush(QColor(0,0,0, 0)))
+                    
+                    painter.drawRect(x+ic, y+ic, w-ic*2, h-ic*2)
+                
                 painter.setFont( QFont('Arial', letterH, QFont.Bold) )
                 painter.setBrush(QBrush(QColor(255,170,0, 127)))
-                painter.setPen(pen)
+                painter.setPen(pen_t)
                 painter.drawText(x + w//3 , y + h - h//4 , letter)
                 
 
