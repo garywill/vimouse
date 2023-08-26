@@ -60,6 +60,8 @@ Keyboard clicking:
 
 - [Vimium C](https://github.com/gdh1995/vimium-c) A Customized Vimium having contextual mapping, global shortcuts, command sequences
 
+- [vimb](https://github.com/fanglingsu/vimb) Vim-like web browser. The goal of Vimb is to build a completely keyboard-driven, efficient and pleasurable browsing-experience with low memory and CPU usage that is intuitive to use for Vim users.
+
 - [Big Search](https://github.com/garywill/BigSearch) A multiple-search-engine browser extension that has keyboard clicking feature on its UI
 
 Edit text using vi-like keybinding on non-vi app:
