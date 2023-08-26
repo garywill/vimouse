@@ -61,6 +61,7 @@ def createWindow(x, y, w,h):
     
     g.wdapp.pub_show.connect(g.wdapp.show)
     g.wdapp.pub_hide.connect(g.wdapp.hide)
+    g.wdapp.pub_refresh.connect(g.wdapp.slot_refresh)
     g.wdapp.pub_quit.connect(g.wdapp.slot_quit)
     
     g.wdapp.pub_show.emit()

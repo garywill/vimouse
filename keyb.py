@@ -44,6 +44,9 @@ def processKeyChar(char) :
         
         if not len(g.keypListFiltered) > 0 :
             resetKeyPrsd()
+            
+        if len(g.keypListFiltered) > 1:
+            g.wdapp.pub_refresh.emit()
         
         if len(g.keypListFiltered) == 1  :
             print("hasMatch")

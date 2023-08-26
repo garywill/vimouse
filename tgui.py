@@ -9,6 +9,7 @@ exec(open('impo.py').read())
 class WdApp(QApplication) :
     pub_show = pyqtSignal()
     pub_hide = pyqtSignal()
+    pub_refresh = pyqtSignal()
     pub_quit = pyqtSignal()
     
     def __init__(self, argv):
@@ -25,6 +26,9 @@ class WdApp(QApplication) :
         self.wd.refresh()
         self.wd.show()
         self.wd.refreshTimer.start()
+        
+    def slot_refresh(self):
+        self.wd.refresh()
         
     def slot_quit(self):
         self.wd.refreshTimer.stop()
