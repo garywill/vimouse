@@ -69,3 +69,5 @@ keypListFiltered = []
 
 letterList = list('ABCDEFGHJKLMNOPQRSTUVWXYZ234789')
 
+import os
+os.chdir ( os.path.abspath( os.path.dirname ( __file__ ) ) )
