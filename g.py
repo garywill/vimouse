@@ -11,8 +11,8 @@ scrW = 1100
 scrH = 500
 
 # enable this if you want to. 
-autoGetDesktopSize = False
-# autoGetDesktopSize = True
+# autoGetDesktopSize = False
+autoGetDesktopSize = True
 # If it doesn't fetch your desktop size correctly, 
 # disable it and manually fill your resolution into above
 
