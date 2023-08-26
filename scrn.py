@@ -156,7 +156,7 @@ def get_desktop_size() :
 #     
 #     w = total_geometry.width()
 #     h = total_geometry.height()
-
+ 
     # # 获取屏幕大小并设置窗口大小
     screen = QGuiApplication.primaryScreen()
     if screen is not None:
