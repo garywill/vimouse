@@ -97,9 +97,9 @@ def on_press(key):
         keyListenerStart(True)
         return
         
-    if key == keyboard.Key.cmd and g.clickKeysStatus == 0 and not g.showingScreen :
+    if key == keyboard.Key.cmd and g.clickKeysStatus == 0  :
         g.clickKeysStatus = 1
-    elif g.clickKeysStatus == 1 and ( key == keyboard.Key.ctrl or key == keyboard.Key.ctrl_l )  and not g.showingScreen:
+    elif g.clickKeysStatus == 1 and ( key == keyboard.Key.ctrl or key == keyboard.Key.ctrl_l )  :
         g.clickKeysStatus = 2
         return
         
@@ -123,7 +123,7 @@ def on_press(key):
     
 
 def on_release(key):
-    if g.clickKeysStatus == 2 and ( key == keyboard.Key.ctrl or key == keyboard.Key.ctrl_l ) and not g.showingScreen :
+    if g.clickKeysStatus == 2 and ( key == keyboard.Key.ctrl or key == keyboard.Key.ctrl_l ) :
         do_click()
         g.clickKeysStatus = 0
         
