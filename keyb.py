@@ -104,7 +104,7 @@ def on_press(key):
         return
         
         
-    if key == keyboard.Key.esc and g.showingScreen :
+    if (key == keyboard.Key.esc or key == keyboard.KeyCode(char=',')) and g.showingScreen :
         keyListenerStop()
         screen_away()
         keyListenerStart(False)
