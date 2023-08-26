@@ -137,7 +137,7 @@ class TransparentWidget(QWidget):
                     x = j * cell_width + (ic-1)
                     painter.drawLine(x, 0, x, wdH)
             
-            for kpc in g.keypList :
+            for kpc in g.keypListFiltered :
                 self.paintLabel(''.join(kpc['keyp']) ,  g.curCellX + kpc['cord'][0] , g.curCellY + kpc['cord'][1] )
                 
                 
