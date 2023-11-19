@@ -1,8 +1,8 @@
-Let's do some tries to dump traditional mouse
+Let's do some tries to dump traditional mouse. Inspired by Vim & Vimium.
 
-# viScreenMouse
+# viMouse
 
-Use keyboard to click anywhere of screen. OpenCV based screenshot visual recognition. 
+Use keyboard to click anywhere of screen. OpenCV based screenshot **visual recognition**. 
 
 > The **vi** in the name here can mean "Vim", "Vision-recognition" or whatever
 
@@ -21,30 +21,30 @@ This is still very simple and **in alpha preview** stage currently. Anything cou
 cd into folder and run `python3 main.py` to start.
 
 1. Hit `ctrl + meta` to find clickable objects on screen and show keys 
-
+   
    > meta key = win key = super key
-
+   
    > During keys shown, any key events are blocked from being sent to any other apps 
    
    To cancel, press ESC or `,`(comma). To return to last step, press backspace
-   
+
 2. Press keys to move mouse to that position
 
 3. It triggers click (if `autoClick=True`. Otherwise hit `meta + ctrl` to trigger click)
 
 > Edit file `g.py` and configure for your need: screenshotDelay, whole screen, autoClick ...
 
-
 Algorithm (filtering, recognizing,  parameters... ) can be improved. If you don't have a high contrast GUI, or some icons or buttons don't have clear contour, or two objects too close, it may fail to recognize.
 
 We're expecting experts comming !
-
 
 ## Other vi / keybinding projects
 
 Keyboard clicking:
 
 - [hunt-and-peck](https://github.com/zsims/hunt-and-peck) Simple vimium/vimperator style navigation for Windows applications based on the UI Automation framework.
+
+- [warpd](https://github.com/rvaiya/warpd) A modal keyboard driven interface for mouse manipulation.
 
 - [vimac](https://github.com/dexterleng/vimac) keyboard-driven navigation and control of the macOS Graphical User Interface (GUI)
 
